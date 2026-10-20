@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Radar de Remates</title>
+<style>
+:root{
+  --bg:#f5f4ef; --card:#ffffff; --ink:#1c1c1a; --muted:#6b6a64; --line:#e4e2da;
+  --accent:#1f5f4a; --accent-soft:#e3f0ea; --warn:#9a4a0c; --warn-soft:#fbeee2;
+  --two:#1f5f4a; --one:#2d5da8; --one-soft:#e6eefa; --chip:#efede6;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .etq.joya{background:#4a3b0c;color:#f4d77a}
+  :root:not([data-theme="light"]){
+    --bg:#141413; --card:#1e1e1c; --ink:#ecebe6; --muted:#a09e96; --line:#33322e;
+    --accent:#6cc3a0; --accent-soft:#1d3a2f; --warn:#f0a868; --warn-soft:#3a2a1b;
+    --two:#6cc3a0; --one:#8fb3ec; --one-soft:#1f2c42; --chip:#2a2a27;
+  }
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  padding:env(safe-area-inset-top,0) 16px env(safe-area-inset-bottom,0)}
+main{max-width:1100px;margin:0 auto;padding-block:20px 60px}
+h1{font-size:22px;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13px}
+button,input,select{font:inherit;color:inherit}
+input[type=number],input[type=text],input[type=date],input[type=password],select{
+  width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--card)}
+button{cursor:pointer;border:1px solid var(--line);background:var(--card);border-radius:9px;padding:9px 14px}
+button.primario{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) button.primario{color:#0e1f18}}
+
+/* Acceso */
+#acceso{max-width:360px;margin:18vh auto 0;display:flex;flex-direction:column;gap:12px}
+#acceso label{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+#error{color:var(--warn);font-size:13px;min-height:1em}
+
+/* Encabezado */
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.kpi b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12px;color:var(--muted)}
+
+/* Filtros */
+details.filtros{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:14px}
+details.filtros>summary{list-style:none;padding:12px 14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between}
+details.filtros>summary::-webkit-details-marker{display:none}
+details.filtros>summary::after{content:"▾";color:var(--muted)}
+details.filtros[open]>summary::after{content:"▴"}
+.rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;padding:0 14px 14px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend,.leyenda{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.par{display:flex;gap:8px;align-items:center}
+.par span{color:var(--muted);font-size:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips label{background:var(--chip);border-radius:999px;padding:5px 10px;font-size:13px;display:flex;gap:5px;align-items:center;cursor:pointer}
+.chips input{margin:0}
+.interruptor{display:flex;gap:8px;align-items:center;font-size:14px;margin-top:6px}
+.acciones{display:flex;gap:8px;flex-wrap:wrap;padding:0 14px 14px}
+
+/* Resultados */
+.barra{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.barra select{width:auto}
+#lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.tarjeta{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.fila{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.tipo{font-weight:650;text-transform:capitalize}
+.lugar{color:var(--muted);font-size:13px}
+.etq{font-size:11px;font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap}
+.etq.dos{background:var(--accent-soft);color:var(--two)}
+.etq.una{background:var(--one-soft);color:var(--one)}
+.etq.nuevo{background:var(--chip);color:var(--ink)}
+.etq.trampa{background:var(--warn-soft);color:var(--warn)}
+.etq.joya{background:#f6e7b0;color:#6b4d00}
+.etq.pista{background:var(--one-soft);color:var(--one)}
+.mercado{font-size:12.5px;background:var(--chip);border-radius:8px;padding:7px 9px}
+.mercado b{font-variant-numeric:tabular-nums}
+.proceso{font-size:12px;color:var(--muted);word-break:break-word}
+.numeros{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 12px;font-size:13px}
+.numeros div span{display:block;color:var(--muted);font-size:11px}
+.numeros b{font-variant-numeric:tabular-nums}
+.base b{font-size:17px}
+.desc{font-size:12.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.desc.abierta{-webkit-line-clamp:unset}
+.alerta{font-size:12px;color:var(--warn)}
+.pie{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-top:auto}
+.pie a{color:var(--accent);font-weight:600;text-decoration:none}
+.vacio{padding:40px 0;text-align:center;color:var(--muted)}
+.nota{font-size:12px;color:var(--muted);margin-top:18px}
+</style>
+</head>
+<body>
+<main>
+
+<section id="acceso">
+  <h1>Radar de Remates</h1>
+  <p class="sub">Escribe la clave del tablero.</p>
+  <input id="clave" type="password" autocomplete="current-password" placeholder="Clave">
+  <label><input id="recordar" type="checkbox" checked> Recordar en este dispositivo</label>
+  <button class="primario" id="entrar">Entrar</button>
+  <div id="error"></div>
+</section>
+
+<section id="app" hidden>
+  <header>
+    <div>
+      <h1>Radar de Remates</h1>
+      <div class="sub" id="actualizado"></div>
+    </div>
+    <button id="salir">Cerrar sesión</button>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><b id="k-total">0</b><span>coinciden con los filtros</span></div>
+    <div class="kpi"><b id="k-dos">0</b><span>permiten comprar dos</span></div>
+    <div class="kpi"><b id="k-una">0</b><span>solo alcanzan para una</span></div>
+    <div class="kpi"><b id="k-joyas">0</b><span>con descuento real ≥ <span id="k-joya-pct">45</span>%</span></div>
+    <div class="kpi"><b id="k-tope">—</b><span>postura máx. por vivienda</span></div>
+  </div>
+
+  <details class="filtros" open>
+    <summary>Filtros</summary>
+    <div class="rejilla">
+      <fieldset>
+        <legend>Presupuesto</legend>
+        <div class="par"><input id="f-presupuesto" type="number" min="0" step="1"><span>millones</span></div>
+        <div class="par" style="margin-top:8px"><span>para</span>
+          <select id="f-casas"><option value="1">1 vivienda</option><option value="2">2 viviendas</option><option value="3">3 viviendas</option></select></div>
+        <label class="interruptor"><input id="f-cabe" type="checkbox"> Solo lo que cabe en el presupuesto</label>
+      </fieldset>
+      <fieldset>
+        <legend>Postura mínima (millones)</legend>
+        <div class="par"><input id="f-base-min" type="number" min="0" placeholder="desde"><span>–</span><input id="f-base-max" type="number" min="0" placeholder="hasta"></div>
+        <div class="leyenda" style="margin-top:12px">Avalúo (millones)</div>
+        <div class="par"><input id="f-av-min" type="number" min="0" placeholder="desde"><span>–</span><input id="f-av-max" type="number" min="0" placeholder="hasta"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Descuento frente al mercado</legend>
+        <div class="par"><span>Mínimo</span><input id="f-desc" type="number" min="0" max="95" step="5" style="width:80px"><span>% bajo el precio de mercado</span></div>
+        <label class="interruptor"><input id="f-solo-desc" type="checkbox"> Solo con descuento real calculado (tienen área)</label>
+        <label class="interruptor"><input id="f-repetidos" type="checkbox"> Solo remates que ya fracasaron antes (menos competencia)</label>
+        <label class="interruptor"><input id="f-sin-precio" type="checkbox"> Incluir avisos oficiales sin avalúo publicado</label>
+      </fieldset>
+      <fieldset>
+        <legend>Tipo</legend>
+        <div class="chips" id="f-tipos"></div>
+        <label class="interruptor"><input id="f-trampas" type="checkbox" checked> Ocultar cuotas partes, rurales y posesiones</label>
+      </fieldset>
+      <fieldset>
+        <legend>Origen</legend>
+        <div class="chips" id="f-fuentes"></div>
+        <label class="interruptor"><input id="f-bancos" type="checkbox"> Solo remates judiciales donde demanda un banco</label>
+      </fieldset>
+      <fieldset>
+        <legend>Ubicación</legend>
+        <select id="f-depto"><option value="">Todos los departamentos</option></select>
+        <input id="f-texto" type="text" placeholder="Municipio, barrio, marca (ej. Mercedes)…" style="margin-top:8px">
+      </fieldset>
+      <fieldset>
+        <legend>Fecha del remate</legend>
+        <div class="par"><input id="f-desde" type="date"><span>–</span><input id="f-hasta" type="date"></div>
+        <div class="par" style="margin-top:8px"><span>Mínimo</span><input id="f-dias" type="number" min="0" style="width:70px"><span>días para prepararse</span></div>
+        <label class="interruptor"><input id="f-nuevos" type="checkbox"> Solo llegados en los últimos 7 días</label>
+      </fieldset>
+    </div>
+    <div class="acciones">
+      <button id="limpiar">Restablecer filtros</button>
+    </div>
+  </details>
+
+  <div class="barra">
+    <span class="sub" id="resumen"></span>
+    <select id="orden">
+      <option value="descuento">Mayor descuento primero</option>
+      <option value="base">Más baratos primero</option>
+      <option value="fecha">Remate más próximo</option>
+      <option value="visto">Recién llegados</option>
+      <option value="avaluo">Mayor avalúo</option>
+    </select>
+  </div>
+  <div id="lista"></div>
+  <p class="nota" id="supuestos"></p>
+</section>
+
+</main>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const ALMACEN = "radar-remates";
+  const TIPOS = [["casa","Casa"],["apartamento","Apartamento"],["otro","Sin tipo claro"],["lote","Lote"],["finca","Finca"],["local","Local/oficina"],["parqueadero","Parqueadero"],["vehiculo","Vehículo"]];
+  const NOMBRES = {rama:"Rama Judicial", asuntoslegales:"Asuntos Legales", rematescolombia:"RematesColombia",
+    rematandobienes:"RematandoBienes", sae:"SAE", cisa:"CISA", dadep:"DADEP Bogotá", davivienda:"Davivienda",
+    davibank:"DAVIbank", cajasocial:"Caja Social", aval:"Grupo Aval", bancoagrario:"Banco Agrario", bbva:"BBVA",
+    bancolombia:"Bancolombia", elmartillo:"El Martillo", superbid:"Superbid", subastasycomercio:"Subastas y Comercio"};
+  const DEFECTO = {presupuesto:90, casas:2, cabe:false, baseMin:"", baseMax:"", avMin:"", avMax:"",
+    tipos:["casa","apartamento","otro"], trampas:true, depto:"", texto:"", desde:"", hasta:"", dias:4, nuevos:false, orden:"descuento",
+    desc:"", soloDesc:false, repetidos:false, sinPrecio:false, fuentesOff:[], bancos:false};
+  let paquete = null;
+  let f = {...DEFECTO};
+
+  const leer = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+  const escribir = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
+
+  const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  async function descifrar(sobre, clave) {
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(clave), "PBKDF2", false, ["deriveKey"]);
+    const llave = await crypto.subtle.deriveKey({name:"PBKDF2", salt:b64(sobre.sal), iterations:sobre.iter, hash:"SHA-256"},
+      base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+    const plano = await crypto.subtle.decrypt({name:"AES-GCM", iv:b64(sobre.iv)}, llave, b64(sobre.datos));
+    return JSON.parse(new TextDecoder().decode(plano));
+  }
+
+  async function entrar(clave, recordar) {
+    $("error").textContent = "Abriendo…";
+    try {
+      const r = await fetch("datos.json?t=" + Date.now(), {cache:"no-store"});
+      const sobre = await r.json();
+      paquete = await descifrar(sobre, clave);
+    } catch (e) {
+      $("error").textContent = "Clave incorrecta o datos no disponibles.";
+      escribir(ALMACEN + ":clave", null);
+      return;
+    }
+    if (recordar) escribir(ALMACEN + ":clave", clave);
+    $("acceso").hidden = true;
+    $("app").hidden = false;
+    iniciar();
+  }
+
+  const M = (v) => v == null || isNaN(v) ? "—" : "$" + (v / 1e6).toLocaleString("es-CO", {minimumFractionDigits:1, maximumFractionDigits:1}) + " M";
+  const num = (v) => v === "" || v == null || isNaN(+v) ? null : +v * 1e6;
+  const hoy = () => new Date(new Date().toLocaleString("en-US", {timeZone:"America/Bogota"}));
+  const iso = (d) => d.toISOString().slice(0, 10);
+
+  function costo(base, venta) {
+    const c = paquete.costos;
+    return base * (1 + (venta ? 0 : c.impuesto_remate_pct) + c.registro_beneficencia_pct + c.colchon_pct) + c.gastos_fijos;
+  }
+  function baseMaxima(tope) {
+    const c = paquete.costos;
+    return (tope - c.gastos_fijos) / (1 + c.impuesto_remate_pct + c.registro_beneficencia_pct + c.colchon_pct);
+  }
+
+  function iniciar() {
+    const guardado = leer(ALMACEN + ":filtros");
+    if (location.hash.length > 1) {
+      try { f = {...DEFECTO, ...JSON.parse(decodeURIComponent(location.hash.slice(1)))}; } catch {}
+    } else if (guardado) {
+      try { f = {...DEFECTO, ...JSON.parse(guardado)}; } catch {}
+    }
+    const conteo = {};
+    paquete.remates.forEach((r) => r.fuentes.forEach((x) => conteo[x] = (conteo[x] || 0) + 1));
+    const ventas = new Set(paquete.remates.filter((r) => r.venta).flatMap((r) => r.fuentes));
+    const nombre = (x) => (NOMBRES[x] || x) + (ventas.has(x) ? " (venta)" : "");
+    $("f-fuentes").innerHTML = Object.keys(conteo).sort((a, b) => ventas.has(a) - ventas.has(b) || conteo[b] - conteo[a])
+      .map((x) => `<label title="${conteo[x]} avisos"><input type="checkbox" value="${esc(x)}">${esc(nombre(x))}</label>`).join("");
+    $("f-tipos").innerHTML = TIPOS.map(([v, t]) => `<label><input type="checkbox" value="${v}">${t}</label>`).join("");
+    const deptos = [...new Set(paquete.remates.map((r) => r.departamento).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+    $("f-depto").innerHTML += deptos.map((d) => `<option>${esc(d)}</option>`).join("");
+    const g = new Date(paquete.generado);
+    $("actualizado").textContent = `Actualizado ${g.toLocaleString("es-CO", {dateStyle:"medium", timeStyle:"short"})} · ${paquete.remates.length} remates vigentes`;
+    const c = paquete.costos;
+    $("supuestos").textContent = `Costo total estimado = postura × (1 + ${c.impuesto_remate_pct*100}% impuesto de remate + ${c.registro_beneficencia_pct*100}% registro + ${c.colchon_pct*100}% colchón) + ${M(c.gastos_fijos)} de abogado y certificados. Depósito para ofertar: 40% del avalúo. Si hay más postores el precio sube. Verifica todo con el expediente y el certificado de tradición antes de consignar.`;
+    pintarFiltros();
+    document.querySelectorAll(".filtros input, .filtros select, #orden").forEach((el) => el.addEventListener("input", () => { tomarFiltros(); render(); }));
+    $("limpiar").onclick = () => { f = {...DEFECTO}; pintarFiltros(); render(); };
+    $("salir").onclick = () => { escribir(ALMACEN + ":clave", null); location.reload(); };
+    $("lista").addEventListener("click", (e) => { if (e.target.classList.contains("desc")) e.target.classList.toggle("abierta"); });
+    render();
+  }
+
+  function pintarFiltros() {
+    $("f-presupuesto").value = f.presupuesto; $("f-casas").value = f.casas; $("f-cabe").checked = f.cabe;
+    $("f-base-min").value = f.baseMin; $("f-base-max").value = f.baseMax; $("f-av-min").value = f.avMin; $("f-av-max").value = f.avMax;
+    document.querySelectorAll("#f-tipos input").forEach((i) => i.checked = f.tipos.includes(i.value));
+    $("f-trampas").checked = f.trampas; $("f-depto").value = f.depto; $("f-texto").value = f.texto;
+    $("f-desde").value = f.desde; $("f-hasta").value = f.hasta; $("f-dias").value = f.dias; $("f-nuevos").checked = f.nuevos;
+    $("orden").value = f.orden;
+    document.querySelectorAll("#f-fuentes input").forEach((i) => i.checked = !f.fuentesOff.includes(i.value));
+    $("f-bancos").checked = f.bancos;
+    $("f-desc").value = f.desc; $("f-solo-desc").checked = f.soloDesc; $("f-repetidos").checked = f.repetidos; $("f-sin-precio").checked = f.sinPrecio;
+  }
+
+  function tomarFiltros() {
+    f = {
+      presupuesto: $("f-presupuesto").value, casas: +$("f-casas").value, cabe: $("f-cabe").checked,
+      baseMin: $("f-base-min").value, baseMax: $("f-base-max").value, avMin: $("f-av-min").value, avMax: $("f-av-max").value,
+      tipos: [...document.querySelectorAll("#f-tipos input:checked")].map((i) => i.value),
+      trampas: $("f-trampas").checked, depto: $("f-depto").value, texto: $("f-texto").value,
+      desde: $("f-desde").value, hasta: $("f-hasta").value, dias: $("f-dias").value, nuevos: $("f-nuevos").checked,
+      orden: $("orden").value,
+      fuentesOff: [...document.querySelectorAll("#f-fuentes input:not(:checked)")].map((i) => i.value),
+      bancos: $("f-bancos").checked,
+      desc: $("f-desc").value, soloDesc: $("f-solo-desc").checked, repetidos: $("f-repetidos").checked, sinPrecio: $("f-sin-precio").checked,
+    };
+    escribir(ALMACEN + ":filtros", JSON.stringify(f));
+    history.replaceState(null, "", "#" + encodeURIComponent(JSON.stringify(f)));
+  }
+
+  const sinTildes = (s) => (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  function render() {
+    const presupuesto = (num(f.presupuesto) ?? 0);
+    const casas = Math.max(1, f.casas || 1);
+    const topeCasas = baseMaxima(presupuesto / casas);
+    const topeUna = baseMaxima(presupuesto);
+    const h = hoy();
+    const hoyIso = iso(h);
+    const limiteDias = iso(new Date(h.getTime() + (+f.dias || 0) * 864e5));
+    const hace7 = iso(new Date(h.getTime() - 7 * 864e5));
+    const bMin = num(f.baseMin), bMax = num(f.baseMax), aMin = num(f.avMin), aMax = num(f.avMax);
+    const q = sinTildes(f.texto.trim());
+
+    const descMin = f.desc === "" ? null : +f.desc / 100;
+    let filas = paquete.remates.filter((r) => {
+      if (r.fuentes.every((x) => f.fuentesOff.includes(x))) return false;
+      if (f.bancos && !r.banco) return false;
+      if (r.fecha && (r.fecha < hoyIso || r.fecha < limiteDias)) return false;
+      if (r.base == null) {
+        if (!f.sinPrecio) return false;
+      } else if (f.trampas && r.base < 8e6) return false;
+      if (descMin != null && !(r.descuento_real >= descMin)) return false;
+      if (f.soloDesc && r.descuento_real == null) return false;
+      if (f.repetidos && !r.repetido) return false;
+      if (!f.tipos.includes(r.tipo)) return false;
+      if (f.trampas && r.alertas.length) return false;
+      if (f.depto && r.departamento !== f.depto) return false;
+      if (bMin != null && !(r.base >= bMin)) return false;
+      if (bMax != null && !(r.base <= bMax)) return false;
+      if (aMin != null && !(r.avaluo >= aMin)) return false;
+      if (aMax != null && !(r.avaluo <= aMax)) return false;
+      if (f.desde && r.fecha && r.fecha < f.desde) return false;
+      if (f.hasta && r.fecha && r.fecha > f.hasta) return false;
+      if (f.nuevos && r.visto < hace7) return false;
+      if (f.cabe && !(r.base <= (casas > 1 ? topeCasas : topeUna))) return false;
+      if (q && !sinTildes(`${r.municipio} ${r.departamento} ${r.descripcion} ${r.juzgado} ${r.radicado}`).includes(q)) return false;
+      return true;
+    });
+
+    const nb = (v) => v ?? Infinity;
+    const orden = {
+      descuento: (a, b) => (b.descuento_real ?? -1) - (a.descuento_real ?? -1) || (a.vs_tipico ?? 9) - (b.vs_tipico ?? 9) || nb(a.base) - nb(b.base),
+      base: (a, b) => nb(a.base) - nb(b.base),
+      fecha: (a, b) => (a.fecha || "9999").localeCompare(b.fecha || "9999"),
+      visto: (a, b) => b.visto.localeCompare(a.visto) || nb(a.base) - nb(b.base),
+      avaluo: (a, b) => (b.avaluo ?? 0) - (a.avaluo ?? 0),
+    }[f.orden] || ((a, b) => nb(a.base) - nb(b.base));
+    filas.sort(orden);
+
+    const conBase = filas.filter((r) => r.base != null);
+    const cabenVarias = conBase.filter((r) => casas > 1 && r.base <= topeCasas).length;
+    const cabeUna = conBase.filter((r) => r.base <= topeUna && !(casas > 1 && r.base <= topeCasas)).length;
+    $("k-total").textContent = filas.length;
+    $("k-dos").textContent = casas > 1 ? cabenVarias : "—";
+    $("k-dos").nextElementSibling.textContent = `permiten comprar ${casas > 1 ? casas : "varias"}`;
+    $("k-una").textContent = cabeUna;
+    $("k-joyas").textContent = filas.filter((r) => r.descuento_real >= paquete.descuento_joya).length;
+    $("k-joya-pct").textContent = Math.round(paquete.descuento_joya * 100);
+    $("k-tope").textContent = M(casas > 1 ? topeCasas : topeUna);
+    $("resumen").textContent = `${filas.length} resultado${filas.length === 1 ? "" : "s"}`;
+
+    if (!filas.length) { $("lista").innerHTML = `<div class="vacio">Nada con estos filtros. Prueba ampliando los rangos.</div>`; return; }
+
+    const P = (v) => Math.round(v * 100) + "%";
+    $("lista").innerHTML = filas.slice(0, 400).map((r) => {
+      const conPrecio = r.base != null;
+      const total = conPrecio ? costo(r.base, r.venta) : null;
+      const dias = r.fecha ? Math.round((new Date(r.fecha + "T12:00:00") - h) / 864e5) : null;
+      let etq = "";
+      if (r.descuento_real >= paquete.descuento_joya) etq += `<span class="etq joya">💎 ${P(r.descuento_real)} bajo mercado</span> `;
+      if (conPrecio && casas > 1 && r.base <= topeCasas) etq += `<span class="etq dos">Caben ${casas}</span>`;
+      else if (conPrecio && r.base <= topeUna) etq += `<span class="etq una">Cabe 1</span>`;
+      if (r.alertas.length || (conPrecio && r.base < 8e6)) etq += ` <span class="etq trampa">Revisar</span>`;
+      if (r.venta) etq += ` <span class="etq pista">${esc(r.modalidad)}</span>`;
+      if (r.banco) etq += ` <span class="etq pista">Demanda un banco</span>`;
+      if (r.repetido) etq += ` <span class="etq pista">Ya fracasó antes</span>`;
+      if (r.catastral) etq += ` <span class="etq pista">Avalúo catastral</span>`;
+      if (!conPrecio) etq += ` <span class="etq pista">Oficial, sin avalúo</span>`;
+      if (r.visto >= hace7) etq += ` <span class="etq nuevo">Nuevo</span>`;
+      const trampa = r.alertas.length ? `<div class="alerta">⚠ ${esc(r.alertas.join(" · "))}</div>`
+        : (conPrecio && r.base < 8e6 ? `<div class="alerta">⚠ Postura muy baja: casi siempre es una fracción del inmueble</div>` : "");
+      let mercado = "";
+      if (r.valor_mercado) {
+        mercado = `<div class="mercado">Mercado estimado <b>${M(r.valor_mercado)}</b> (${Math.round(r.area)} m² × ${M(r.m2_mercado)}/m², valor conservador de la ciudad; el barrio cambia mucho) · descuento real <b>${P(r.descuento_real)}</b>${r.descuento_real > 0.7 ? `<div class="alerta">Demasiado bueno para ser cierto: confirma que esos m² son de la vivienda (no del lote) y que se remata el 100%.</div>` : ""}</div>`;
+      } else if (r.vs_tipico) {
+        mercado = `<div class="mercado">La postura es el <b>${P(r.vs_tipico)}</b> de lo que cuesta ${r.tipo === "casa" ? "una casa económica" : "un apartamento económico"} en ${esc(r.municipio)} (${M(r.precio_tipico)}, el 25% más barato de los anuncios). Sin área publicada: confirmar tamaño.</div>`;
+      }
+      const proceso = [r.juzgado, r.radicado && `Rad. ${r.radicado}`, r.matricula && `Matrícula ${r.matricula}`, r.correo]
+        .filter(Boolean).map(esc).join(" · ");
+      const enlaces = r.enlaces.map((e) => `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(NOMBRES[e.fuente] || e.fuente)}</a>`);
+      return `<article class="tarjeta">
+        <div class="fila"><div><div class="tipo">${esc(r.tipo === "otro" ? "Inmueble" : r.tipo)}</div>
+          <div class="lugar">${esc([r.municipio, r.departamento].filter(Boolean).join(", ") || "Sin ubicación")}</div></div>
+          <div style="text-align:right">${etq}</div></div>
+        <div class="numeros">
+          <div class="base"><span>${r.venta ? "Precio base" : "Postura mínima"}</span><b>${M(r.base)}</b></div>
+          <div><span>Avalúo</span><b>${M(r.avaluo)}</b></div>
+          <div><span>${r.venta ? "Depósito" : "Depósito 40%"}</span><b>${r.venta ? "Según pliego" : (r.avaluo ? M(r.avaluo * 0.4) : "—")}</b></div>
+          <div><span>Costo total est.</span><b>${M(total)}</b></div>
+        </div>
+        ${mercado}
+        ${trampa}
+        ${proceso ? `<div class="proceso">${proceso}</div>` : ""}
+        <div class="desc" title="Toca para ver completo">${esc(r.descripcion)}</div>
+        <div class="pie"><span class="sub">${r.fecha ? `${esc(r.fecha)} ${esc(r.hora)} · en ${dias} días` : "Venta directa, sin fecha fija"}</span>
+          <span>${enlaces.join(" · ")} →</span></div>
+      </article>`;
+    }).join("");
+  }
+
+  $("entrar").onclick = () => entrar($("clave").value, $("recordar").checked);
+  $("clave").addEventListener("keydown", (e) => { if (e.key === "Enter") $("entrar").click(); });
+  const guardada = leer(ALMACEN + ":clave");
+  if (guardada) entrar(guardada, true);
+})();
+</script>
+</body>
+</html>
