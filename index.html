@@ -4,206 +4,414 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Radar de Remates</title>
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mi vivienda">
+<title>Mi vivienda</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E">
 <style>
+/* Liquid Glass (iOS 26): fondo con luces de color, vidrio esmerilado y barra de pestañas flotante.
+   Este archivo es público: solo lleva la interfaz. Todos los datos llegan cifrados. */
 :root{
-  --bg:#f5f4ef; --card:#ffffff; --ink:#1c1c1a; --muted:#6b6a64; --line:#e4e2da;
-  --accent:#1f5f4a; --accent-soft:#e3f0ea; --warn:#9a4a0c; --warn-soft:#fbeee2;
-  --two:#1f5f4a; --one:#2d5da8; --one-soft:#e6eefa; --chip:#efede6;
+  --bg:#EEF2F8; --glow1:#7FB2FF; --glow2:#9BE7C4; --glow3:#FFC9A8; --glow4:#D9B8FF;
+  --glass:rgba(255,255,255,.58); --glass-strong:rgba(255,255,255,.80); --glass-edge:rgba(255,255,255,.85);
+  --glass-shadow:rgba(30,45,80,.12); --shine:rgba(255,255,255,.6);
+  --fg:#1D1D1F; --muted:#55555C; --tenue:#7A7A82; --line:rgba(60,60,67,.14);
+  --accent:#0066D6; --accent-soft:rgba(0,102,214,.12); --on-accent:#ffffff;
+  --ok:#0F7B3E; --ok-soft:rgba(15,123,62,.13); --warn:#8A5A00; --warn-soft:rgba(255,170,40,.20);
+  --bad:#B42318; --bad-soft:rgba(220,50,40,.13); --gold:#7A5600; --gold-soft:rgba(240,190,40,.26);
+  --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,Helvetica,Arial,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,Helvetica,Arial,sans-serif;
+  --emoji:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  --r:24px; --blur:blur(22px) saturate(180%);
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .etq.joya{background:#4a3b0c;color:#f4d77a}
-  :root:not([data-theme="light"]){
-    --bg:#141413; --card:#1e1e1c; --ink:#ecebe6; --muted:#a09e96; --line:#33322e;
-    --accent:#6cc3a0; --accent-soft:#1d3a2f; --warn:#f0a868; --warn-soft:#3a2a1b;
-    --two:#6cc3a0; --one:#8fb3ec; --one-soft:#1f2c42; --chip:#2a2a27;
-  }
-}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#05070C; --glow1:#1E4FB8; --glow2:#0F6B54; --glow3:#7A3B1E; --glow4:#4B2A80;
+  --glass:rgba(40,44,54,.55); --glass-strong:rgba(44,48,58,.82); --glass-edge:rgba(255,255,255,.14);
+  --glass-shadow:rgba(0,0,0,.45); --shine:rgba(255,255,255,.12);
+  --fg:#F5F5F7; --muted:#A8A8B0; --tenue:#8A8A92; --line:rgba(255,255,255,.1);
+  --accent:#4C9BFF; --accent-soft:rgba(76,155,255,.18); --on-accent:#04122A;
+  --ok:#4CC27D; --ok-soft:rgba(76,194,125,.16); --warn:#F0B35A; --warn-soft:rgba(240,179,90,.16);
+  --bad:#FF7A6E; --bad-soft:rgba(255,122,110,.16); --gold:#F4D77A; --gold-soft:rgba(244,215,122,.18); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#05070C; --glow1:#1E4FB8; --glow2:#0F6B54; --glow3:#7A3B1E; --glow4:#4B2A80;
+  --glass:rgba(40,44,54,.55); --glass-strong:rgba(44,48,58,.82); --glass-edge:rgba(255,255,255,.14);
+  --glass-shadow:rgba(0,0,0,.45); --shine:rgba(255,255,255,.12);
+  --fg:#F5F5F7; --muted:#A8A8B0; --tenue:#8A8A92; --line:rgba(255,255,255,.1);
+  --accent:#4C9BFF; --accent-soft:rgba(76,155,255,.18); --on-accent:#04122A;
+  --ok:#4CC27D; --ok-soft:rgba(76,194,125,.16); --warn:#F0B35A; --warn-soft:rgba(240,179,90,.16);
+  --bad:#FF7A6E; --bad-soft:rgba(255,122,110,.16); --gold:#F4D77A; --gold-soft:rgba(244,215,122,.18); color-scheme:dark}
+
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  padding:env(safe-area-inset-top,0) 16px env(safe-area-inset-bottom,0)}
-main{max-width:1100px;margin:0 auto;padding-block:20px 60px}
-h1{font-size:22px;margin:0;letter-spacing:-.01em}
-.sub{color:var(--muted);font-size:13px}
-button,input,select{font:inherit;color:inherit}
-input[type=number],input[type=text],input[type=date],input[type=password],select{
-  width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--card)}
-button{cursor:pointer;border:1px solid var(--line);background:var(--card);border-radius:9px;padding:9px 14px}
-button.primario{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) button.primario{color:#0e1f18}}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;letter-spacing:-.012em;
+  -webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;
+  background:radial-gradient(40% 35% at 15% 10%,var(--glow1),transparent 70%),radial-gradient(35% 30% at 90% 25%,var(--glow2),transparent 70%),
+    radial-gradient(45% 35% at 50% 95%,var(--glow3),transparent 70%),radial-gradient(30% 30% at 80% 70%,var(--glow4),transparent 70%);
+  opacity:.55;filter:blur(30px)}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left));
+  padding-block:calc(14px + env(safe-area-inset-top,0px)) calc(118px + env(safe-area-inset-bottom,0px))}
+.emoji{font-family:var(--emoji);font-style:normal;font-weight:400}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;color:var(--fg)}
+h1{font-size:clamp(32px,8.5vw,42px);line-height:1.05;font-weight:700;letter-spacing:-.035em}
+h2{font-size:clamp(22px,5.6vw,27px);line-height:1.12;font-weight:700;letter-spacing:-.03em;margin-block:26px 2px;display:flex;align-items:center;gap:10px}
+h3{font-size:17px;font-weight:650;letter-spacing:-.02em}
+p{margin:0}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+b,strong{font-weight:650}
+button,input,select{font:inherit;color:inherit;letter-spacing:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
+.muted,.sub{color:var(--muted)}
+.sub{font-size:13.5px}
+.mono{font-variant-numeric:tabular-nums;font-weight:600}
+
+/* Vidrio */
+.glass,.card,.fig,.kpi,.tarjeta,details.filtros,details.plegable,.note,nav.tabs,.tbl,.timeline,.task,.vacio,.seg,#acceso{
+  background:var(--glass);border:1px solid var(--glass-edge);border-radius:var(--r);
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);
+  box-shadow:0 8px 30px var(--glass-shadow),inset 0 1px 0 var(--shine)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .glass,.card,.fig,.kpi,.tarjeta,details.filtros,details.plegable,.note,nav.tabs,.tbl,.timeline,.task,.vacio,.seg,#acceso{background:var(--glass-strong)}}
+
+/* Controles */
+input[type=number],input[type=text],input[type=date],input[type=password],input[type=search],select{
+  width:100%;min-height:42px;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:var(--glass-strong);font-size:16px}
+select{appearance:none;-webkit-appearance:none;padding-right:30px;
+  background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 16px) 55%,calc(100% - 11px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px;margin:0;flex:0 0 auto}
+.btn,button.primario,button.boton{font:650 15px var(--body);border:0;border-radius:999px;padding:10px 18px;cursor:pointer;min-height:42px;
+  background:var(--accent);color:var(--on-accent);box-shadow:0 4px 14px var(--accent-soft),inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform .15s;text-decoration:none!important;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:active,button.primario:active,button.boton:active{transform:scale(.96)}
+.btn.ghost,button.boton{background:var(--accent-soft);color:var(--accent);box-shadow:none}
+.btn.chico{min-height:34px;padding:6px 12px;font-size:13.5px}
 
 /* Acceso */
-#acceso{max-width:360px;margin:18vh auto 0;display:flex;flex-direction:column;gap:12px}
-#acceso label{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
-#error{color:var(--warn);font-size:13px;min-height:1em}
+#acceso{max-width:380px;margin:14vh auto 0;display:flex;flex-direction:column;gap:12px;padding:26px 22px;border-radius:30px}
+#acceso .hero{font-family:var(--emoji);font-size:52px;line-height:1}
+#acceso label{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted)}
+#error{color:var(--bad);font-size:14px;min-height:1.2em}
 
 /* Encabezado */
-header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
-.kpi b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
-.kpi span{font-size:12px;color:var(--muted)}
+.cabeza{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:8px 4px 14px}
+.cabeza .eyebrow{font-size:12px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+#salir{font-size:13.5px;min-height:36px;padding:6px 14px}
 
-/* Filtros */
-details.filtros{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:14px}
-details.filtros>summary{list-style:none;padding:12px 14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between}
-details.filtros>summary::-webkit-details-marker{display:none}
-details.filtros>summary::after{content:"▾";color:var(--muted)}
-details.filtros[open]>summary::after{content:"▴"}
-.rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;padding:0 14px 14px}
-fieldset{border:0;margin:0;padding:0;min-width:0}
-legend,.leyenda{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
-.par{display:flex;gap:8px;align-items:center}
-.par span{color:var(--muted);font-size:12px}
+/* Barra de pestañas flotante */
+nav.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:30;
+  display:flex;gap:2px;padding:6px;border-radius:999px;max-width:calc(100% - 16px);overflow-x:auto;scrollbar-width:none;background:var(--glass-strong)}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:1 0 auto;display:grid;justify-items:center;gap:1px;min-width:62px;font:600 10.5px var(--body);letter-spacing:0;border:0;
+  background:transparent;color:var(--muted);padding:6px 8px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
+nav.tabs button .emoji{font-size:22px;line-height:1.1;filter:saturate(.8);transition:transform .25s}
+nav.tabs button[aria-selected="true"]{background:var(--accent-soft);color:var(--accent)}
+nav.tabs button[aria-selected="true"] .emoji{filter:none;transform:scale(1.08)}
+
+/* Bloques comunes */
+.panel{display:grid;gap:12px;align-content:start;grid-template-columns:minmax(0,1fr)}
+.panel>*{min-width:0}
+.figures,.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:720px){.kpis{grid-template-columns:repeat(5,minmax(0,1fr))}.figures{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.fig,.kpi{padding:13px 15px;border-radius:22px;min-width:0}
+.fig b,.kpi b{display:block;font-family:var(--display);font-size:clamp(22px,6vw,28px);font-weight:700;letter-spacing:-.035em;color:var(--accent);
+  font-variant-numeric:tabular-nums;line-height:1.08;overflow-wrap:anywhere}
+.fig span,.kpi>span{color:var(--muted);font-size:13px;line-height:1.3;display:block;margin-top:4px}
+.kpi>span span{display:inline;margin:0;font-size:inherit}
+.card{padding:16px}
+.note{padding:14px 16px;font-size:15.5px;border-radius:20px}
+.note.bad{background:linear-gradient(var(--bad-soft),var(--bad-soft)),var(--glass)}
+.note.warn{background:linear-gradient(var(--warn-soft),var(--warn-soft)),var(--glass)}
+.note.ok{background:linear-gradient(var(--ok-soft),var(--ok-soft)),var(--glass)}
+.note.info{background:linear-gradient(var(--accent-soft),var(--accent-soft)),var(--glass)}
+.note.bad b:first-child{color:var(--bad)}.note.warn b:first-child{color:var(--warn)}.note.ok b:first-child{color:var(--ok)}
+.vacio{padding:34px 20px;text-align:center;color:var(--muted);display:grid;gap:8px;justify-items:center}
+.vacio .emoji{font-size:44px;line-height:1}
+.vacio b{color:var(--fg);font-size:18px}
+.pill,.etq{display:inline-block;font-size:12px;font-weight:650;padding:3px 9px;border-radius:999px;white-space:nowrap;line-height:1.35}
+.pill.ok,.etq.dos{background:var(--ok-soft);color:var(--ok)}
+.pill.warn,.etq.trampa{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info,.etq.una,.etq.pista{background:var(--accent-soft);color:var(--accent)}
+.pill.gris,.etq.nuevo{background:var(--line);color:var(--fg)}
+.etq.joya,.pill.oro{background:var(--gold-soft);color:var(--gold)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chips label{background:var(--chip);border-radius:999px;padding:5px 10px;font-size:13px;display:flex;gap:5px;align-items:center;cursor:pointer}
-.chips input{margin:0}
-.interruptor{display:flex;gap:8px;align-items:center;font-size:14px;margin-top:6px}
-.acciones{display:flex;gap:8px;flex-wrap:wrap;padding:0 14px 14px}
+.chips label,.toggle{background:var(--glass-strong);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:13.5px;
+  display:inline-flex;gap:6px;align-items:center;cursor:pointer;min-height:34px}
+.tbl{overflow-x:auto;padding:4px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--tenue);font-weight:650}
+tr:last-child td{border-bottom:0}
+.num{text-align:right;white-space:nowrap}
 
-/* Resultados */
-.barra{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
-.barra select{width:auto}
-#lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
-.tarjeta{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+/* Remates: filtros y tarjetas */
+details.filtros,details.plegable{border-radius:22px}
+details.filtros>summary,details.plegable>summary{list-style:none;padding:14px 16px;font-weight:650;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;border-radius:22px}
+details.filtros>summary::-webkit-details-marker,details.plegable>summary::-webkit-details-marker{display:none}
+details.filtros>summary::after,details.plegable>summary::after{content:"＋";color:var(--accent);font-weight:700}
+details.filtros[open]>summary::after,details.plegable[open]>summary::after{content:"－"}
+.rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;padding:0 16px 16px}
+fieldset{border:0;margin:0;padding:0;min-width:0;display:grid;gap:8px;align-content:start}
+legend,.leyenda{font-size:12px;font-weight:650;color:var(--tenue);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;padding:0}
+.par{display:flex;gap:8px;align-items:center}
+.par span{color:var(--muted);font-size:13px;white-space:nowrap}
+.interruptor{display:flex;gap:8px;align-items:center;font-size:14.5px;cursor:pointer}
+.acciones{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 16px}
+.barra{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 4px}
+.barra select{width:auto;min-width:200px}
+.lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:12px}
+.tarjeta{padding:16px;display:flex;flex-direction:column;gap:9px;border-radius:22px;min-width:0}
 .fila{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
-.tipo{font-weight:650;text-transform:capitalize}
-.lugar{color:var(--muted);font-size:13px}
-.etq{font-size:11px;font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap}
-.etq.dos{background:var(--accent-soft);color:var(--two)}
-.etq.una{background:var(--one-soft);color:var(--one)}
-.etq.nuevo{background:var(--chip);color:var(--ink)}
-.etq.trampa{background:var(--warn-soft);color:var(--warn)}
-.etq.joya{background:#f6e7b0;color:#6b4d00}
-.etq.pista{background:var(--one-soft);color:var(--one)}
-.mercado{font-size:12.5px;background:var(--chip);border-radius:8px;padding:7px 9px}
+.etqs{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:62%}
+.tipo{font-family:var(--display);font-weight:650;font-size:17px;text-transform:capitalize;letter-spacing:-.02em}
+.lugar{color:var(--muted);font-size:13.5px}
+.mercado{font-size:13px;background:var(--glass-strong);border:1px solid var(--line);border-radius:14px;padding:8px 10px}
 .mercado b{font-variant-numeric:tabular-nums}
 .proceso{font-size:12px;color:var(--muted);word-break:break-word}
-.numeros{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 12px;font-size:13px}
-.numeros div span{display:block;color:var(--muted);font-size:11px}
+.numeros{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px;font-size:14px}
+.numeros div span{display:block;color:var(--tenue);font-size:11.5px}
 .numeros b{font-variant-numeric:tabular-nums}
-.base b{font-size:17px}
-.desc{font-size:12.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.base b,.precio b{font-size:19px;font-family:var(--display);letter-spacing:-.02em;color:var(--accent)}
+.desc{font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
 .desc.abierta{-webkit-line-clamp:unset}
-.alerta{font-size:12px;color:var(--warn)}
-.pie{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-top:auto}
-.pie a{color:var(--accent);font-weight:600;text-decoration:none}
-.vacio{padding:40px 0;text-align:center;color:var(--muted)}
-.nota{font-size:12px;color:var(--muted);margin-top:18px}
+.alerta{font-size:12.5px;color:var(--warn)}
+.pie{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:13.5px;margin-top:auto}
+.pie a{font-weight:650}
+.nota{font-size:12.5px;color:var(--muted);margin:10px 4px 0}
+s.antes{color:var(--tenue);font-size:13px}
+
+/* Comparar */
+.duelo{display:grid;gap:12px}
+@media (min-width:760px){.duelo{grid-template-columns:1fr 1fr}}
+.duelo h3{display:flex;gap:8px;align-items:center;margin:0 4px}
+.mini{padding:14px;border-radius:20px;display:grid;gap:6px}
+.mini .fila b{font-variant-numeric:tabular-nums}
+.semaforo{display:inline-flex;align-items:center;gap:6px;font-weight:650}
+.semaforo::before{content:"";width:9px;height:9px;border-radius:50%;background:currentColor}
+
+/* Plan */
+.seg{display:flex;gap:4px;padding:5px;border-radius:999px;overflow-x:auto;scrollbar-width:none;position:sticky;top:calc(6px + env(safe-area-inset-top,0px));z-index:10;background:var(--glass-strong)}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:0 0 auto;border:0;background:transparent;color:var(--muted);font:600 14px var(--body);padding:8px 13px;border-radius:999px;cursor:pointer;min-height:38px;white-space:nowrap}
+.seg button[aria-selected="true"]{background:var(--glass);color:var(--fg);box-shadow:0 2px 10px var(--glass-shadow),inset 0 1px 0 var(--shine)}
+.timeline{list-style:none;margin:0;padding:6px 16px;display:grid}
+.timeline li{display:grid;grid-template-columns:92px 1fr;gap:12px;padding-block:12px;border-top:1px solid var(--line)}
+.timeline li:first-child{border-top:0}
+.when{font-size:13px;font-weight:650;color:var(--accent);padding-top:2px;font-variant-numeric:tabular-nums}
+.group{display:grid;gap:8px;margin-top:6px}
+.group>h3{font-size:12.5px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--tenue);margin:10px 4px 0}
+.task{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;padding:14px;border-radius:20px;cursor:pointer}
+.task input{appearance:none;-webkit-appearance:none;width:24px;height:24px;margin:0;border-radius:50%;border:2px solid var(--tenue);display:grid;place-items:center;cursor:pointer;transition:all .2s}
+.task input:checked{background:var(--ok);border-color:var(--ok)}
+.task input:checked::after{content:"✓";color:#fff;font-size:14px;font-weight:800}
+.task.done{opacity:.6}
+.task.done .t{text-decoration:line-through}
+.t{font-weight:650}
+.d{color:var(--muted);font-size:14.5px;margin-top:3px}
+.progress{height:10px;border-radius:99px;overflow:hidden;background:var(--glass);border:1px solid var(--glass-edge)}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--ok));width:0;transition:width .4s}
+.msg{padding:0 16px 16px;display:grid;gap:10px}
+.msg pre{white-space:pre-wrap;font-family:var(--body);font-size:14.5px;background:var(--glass-strong);border-radius:16px;padding:14px;margin:0;border:1px solid var(--line)}
+.msg .btn{justify-self:start}
+.contact{display:grid;gap:6px}
+.contact .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14.5px}
+.contact .row .k{color:var(--muted);min-width:82px;font-size:13.5px}
+ul.clean{margin:0;padding:14px 16px 14px 34px;display:grid;gap:6px;color:var(--muted)}
+.proy{display:grid;gap:6px}
+.proy .fila b{font-variant-numeric:tabular-nums}
+
+/* Markdown */
+.md{padding:4px 16px 16px;font-size:15px;overflow-wrap:anywhere}
+.md h2{font-size:21px;margin-block:18px 6px}
+.md h3{font-size:17px;margin-block:16px 4px}
+.md h4,.md h5{font-size:15.5px;margin-block:12px 4px}
+.md p,.md ul,.md ol,.md blockquote,.md pre,.md .tbl{margin-block:8px}
+.md ul,.md ol{padding-left:22px}
+.md li{margin-block:3px}
+.md hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+.md blockquote{border-left:3px solid var(--accent);padding:4px 12px;color:var(--muted)}
+.md code{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--glass-strong);padding:1px 5px;border-radius:6px}
+.md pre{white-space:pre-wrap;background:var(--glass-strong);padding:12px;border-radius:14px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace}
+.md .tbl{box-shadow:none;background:var(--glass-strong)}
+footer{margin-top:30px;color:var(--tenue);font-size:13px;text-align:center}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<main>
+<div class="wrap">
 
 <section id="acceso">
-  <h1>Radar de Remates</h1>
+  <span class="hero" aria-hidden="true">🏡</span>
+  <h1>Mi vivienda</h1>
   <p class="sub">Escribe la clave del tablero.</p>
-  <input id="clave" type="password" autocomplete="current-password" placeholder="Clave">
+  <input id="clave" type="password" autocomplete="current-password" placeholder="Clave" aria-label="Clave">
   <label><input id="recordar" type="checkbox" checked> Recordar en este dispositivo</label>
   <button class="primario" id="entrar">Entrar</button>
-  <div id="error"></div>
+  <div id="error" role="status" aria-live="polite"></div>
 </section>
 
-<section id="app" hidden>
-  <header>
-    <div>
-      <h1>Radar de Remates</h1>
-      <div class="sub" id="actualizado"></div>
+<div id="app" hidden>
+
+  <!-- ===================== REMATES ===================== -->
+  <section id="p-remates" class="panel" role="tabpanel" aria-labelledby="t-remates" hidden>
+    <div class="cabeza">
+      <div>
+        <div class="eyebrow">Radar</div>
+        <h1>Remates</h1>
+        <div class="sub" id="actualizado"></div>
+      </div>
+      <button id="salir" class="boton" type="button">Cerrar sesión</button>
     </div>
-    <button id="salir">Cerrar sesión</button>
-  </header>
 
-  <div class="kpis">
-    <div class="kpi"><b id="k-total">0</b><span>coinciden con los filtros</span></div>
-    <div class="kpi"><b id="k-dos">0</b><span>permiten comprar dos</span></div>
-    <div class="kpi"><b id="k-una">0</b><span>solo alcanzan para una</span></div>
-    <div class="kpi"><b id="k-joyas">0</b><span>con descuento real ≥ <span id="k-joya-pct">45</span>%</span></div>
-    <div class="kpi"><b id="k-tope">—</b><span>postura máx. por vivienda</span></div>
-  </div>
-
-  <details class="filtros" open>
-    <summary>Filtros</summary>
-    <div class="rejilla">
-      <fieldset>
-        <legend>Presupuesto</legend>
-        <div class="par"><input id="f-presupuesto" type="number" min="0" step="1"><span>millones</span></div>
-        <div class="par" style="margin-top:8px"><span>para</span>
-          <select id="f-casas"><option value="1">1 vivienda</option><option value="2">2 viviendas</option><option value="3">3 viviendas</option></select></div>
-        <label class="interruptor"><input id="f-cabe" type="checkbox"> Solo lo que cabe en el presupuesto</label>
-      </fieldset>
-      <fieldset>
-        <legend>Postura mínima (millones)</legend>
-        <div class="par"><input id="f-base-min" type="number" min="0" placeholder="desde"><span>–</span><input id="f-base-max" type="number" min="0" placeholder="hasta"></div>
-        <div class="leyenda" style="margin-top:12px">Avalúo (millones)</div>
-        <div class="par"><input id="f-av-min" type="number" min="0" placeholder="desde"><span>–</span><input id="f-av-max" type="number" min="0" placeholder="hasta"></div>
-      </fieldset>
-      <fieldset>
-        <legend>Descuento frente al mercado</legend>
-        <div class="par"><span>Mínimo</span><input id="f-desc" type="number" min="0" max="95" step="5" style="width:80px"><span>% bajo el precio de mercado</span></div>
-        <label class="interruptor"><input id="f-solo-desc" type="checkbox"> Solo con descuento real calculado (tienen área)</label>
-        <label class="interruptor"><input id="f-repetidos" type="checkbox"> Solo remates que ya fracasaron antes (menos competencia)</label>
-        <label class="interruptor"><input id="f-sin-precio" type="checkbox"> Incluir avisos oficiales sin avalúo publicado</label>
-      </fieldset>
-      <fieldset>
-        <legend>Tipo</legend>
-        <div class="chips" id="f-tipos"></div>
-        <label class="interruptor"><input id="f-trampas" type="checkbox" checked> Ocultar cuotas partes, rurales y posesiones</label>
-      </fieldset>
-      <fieldset>
-        <legend>Origen</legend>
-        <div class="chips" id="f-fuentes"></div>
-        <label class="interruptor"><input id="f-bancos" type="checkbox"> Solo remates judiciales donde demanda un banco</label>
-      </fieldset>
-      <fieldset>
-        <legend>Ubicación</legend>
-        <select id="f-depto"><option value="">Todos los departamentos</option></select>
-        <input id="f-texto" type="text" placeholder="Municipio, barrio, marca (ej. Mercedes)…" style="margin-top:8px">
-      </fieldset>
-      <fieldset>
-        <legend>Fecha del remate</legend>
-        <div class="par"><input id="f-desde" type="date"><span>–</span><input id="f-hasta" type="date"></div>
-        <div class="par" style="margin-top:8px"><span>Mínimo</span><input id="f-dias" type="number" min="0" style="width:70px"><span>días para prepararse</span></div>
-        <label class="interruptor"><input id="f-nuevos" type="checkbox"> Solo llegados en los últimos 7 días</label>
-      </fieldset>
+    <div class="kpis">
+      <div class="kpi"><b id="k-total">0</b><span>coinciden con los filtros</span></div>
+      <div class="kpi"><b id="k-dos">0</b><span>permiten comprar dos</span></div>
+      <div class="kpi"><b id="k-una">0</b><span>solo alcanzan para una</span></div>
+      <div class="kpi"><b id="k-joyas">0</b><span>con descuento real ≥ <span id="k-joya-pct">45</span>%</span></div>
+      <div class="kpi"><b id="k-tope">—</b><span>postura máx. por vivienda</span></div>
     </div>
-    <div class="acciones">
-      <button id="limpiar">Restablecer filtros</button>
+
+    <details class="filtros">
+      <summary><span><span class="emoji" aria-hidden="true">🎛️</span> Filtros</span></summary>
+      <div class="rejilla">
+        <fieldset>
+          <legend>Presupuesto</legend>
+          <div class="par"><input id="f-presupuesto" type="number" min="0" step="1" aria-label="Presupuesto en millones"><span>millones</span></div>
+          <div class="par"><span>para</span>
+            <select id="f-casas" aria-label="Número de viviendas"><option value="1">1 vivienda</option><option value="2">2 viviendas</option><option value="3">3 viviendas</option></select></div>
+          <label class="interruptor"><input id="f-cabe" type="checkbox"> Solo lo que cabe en el presupuesto</label>
+        </fieldset>
+        <fieldset>
+          <legend>Postura mínima (millones)</legend>
+          <div class="par"><input id="f-base-min" type="number" min="0" placeholder="desde" aria-label="Postura desde"><span>–</span><input id="f-base-max" type="number" min="0" placeholder="hasta" aria-label="Postura hasta"></div>
+          <div class="leyenda" style="margin-top:6px">Avalúo (millones)</div>
+          <div class="par"><input id="f-av-min" type="number" min="0" placeholder="desde" aria-label="Avalúo desde"><span>–</span><input id="f-av-max" type="number" min="0" placeholder="hasta" aria-label="Avalúo hasta"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Descuento frente al mercado</legend>
+          <div class="par"><span>Mínimo</span><input id="f-desc" type="number" min="0" max="95" step="5" style="width:84px" aria-label="Descuento mínimo"><span>% bajo mercado</span></div>
+          <label class="interruptor"><input id="f-solo-desc" type="checkbox"> Solo con descuento real calculado (tienen área)</label>
+          <label class="interruptor"><input id="f-repetidos" type="checkbox"> Solo remates que ya fracasaron antes (menos competencia)</label>
+          <label class="interruptor"><input id="f-sin-precio" type="checkbox"> Incluir avisos oficiales sin avalúo publicado</label>
+        </fieldset>
+        <fieldset>
+          <legend>Tipo</legend>
+          <div class="chips" id="f-tipos"></div>
+          <label class="interruptor"><input id="f-trampas" type="checkbox" checked> Ocultar cuotas partes, rurales y posesiones</label>
+        </fieldset>
+        <fieldset>
+          <legend>Origen</legend>
+          <div class="chips" id="f-fuentes"></div>
+          <label class="interruptor"><input id="f-bancos" type="checkbox"> Solo remates judiciales donde demanda un banco</label>
+        </fieldset>
+        <fieldset>
+          <legend>Ubicación</legend>
+          <select id="f-depto" aria-label="Departamento"><option value="">Todos los departamentos</option></select>
+          <input id="f-texto" type="text" placeholder="Municipio, barrio, marca (ej. Mercedes)…" aria-label="Buscar texto">
+        </fieldset>
+        <fieldset>
+          <legend>Fecha del remate</legend>
+          <div class="par"><input id="f-desde" type="date" aria-label="Desde"><span>–</span><input id="f-hasta" type="date" aria-label="Hasta"></div>
+          <div class="par"><span>Mínimo</span><input id="f-dias" type="number" min="0" style="width:74px" aria-label="Días mínimos"><span>días para prepararse</span></div>
+          <label class="interruptor"><input id="f-nuevos" type="checkbox"> Solo llegados en los últimos 7 días</label>
+        </fieldset>
+      </div>
+      <div class="acciones">
+        <button id="limpiar" class="boton" type="button">Restablecer filtros</button>
+      </div>
+    </details>
+
+    <div class="barra">
+      <span class="sub" id="resumen" role="status"></span>
+      <select id="orden" aria-label="Ordenar remates">
+        <option value="descuento">Mayor descuento primero</option>
+        <option value="base">Más baratos primero</option>
+        <option value="fecha">Remate más próximo</option>
+        <option value="visto">Recién llegados</option>
+        <option value="avaluo">Mayor avalúo</option>
+      </select>
     </div>
-  </details>
+    <div id="lista" class="lista"></div>
+    <p class="nota" id="supuestos"></p>
+  </section>
 
-  <div class="barra">
-    <span class="sub" id="resumen"></span>
-    <select id="orden">
-      <option value="descuento">Mayor descuento primero</option>
-      <option value="base">Más baratos primero</option>
-      <option value="fecha">Remate más próximo</option>
-      <option value="visto">Recién llegados</option>
-      <option value="avaluo">Mayor avalúo</option>
-    </select>
-  </div>
-  <div id="lista"></div>
-  <p class="nota" id="supuestos"></p>
-</section>
+  <!-- ===================== VIVIENDA ===================== -->
+  <section id="p-vivienda" class="panel" role="tabpanel" aria-labelledby="t-vivienda" hidden>
+    <div class="cabeza"><div>
+      <div class="eyebrow">Radar</div>
+      <h1>Vivienda</h1>
+      <div class="sub" id="v-actualizado"></div>
+    </div></div>
+    <div id="v-cuerpo"></div>
+  </section>
 
-</main>
+  <!-- ===================== COMPARAR ===================== -->
+  <section id="p-comparar" class="panel" role="tabpanel" aria-labelledby="t-comparar" hidden>
+    <div class="cabeza"><div>
+      <div class="eyebrow">Misma plata, dos caminos</div>
+      <h1>Comparar</h1>
+      <div class="sub" id="c-sub"></div>
+    </div></div>
+    <div id="c-cuerpo"></div>
+  </section>
+
+  <!-- ===================== MI PLAN ===================== -->
+  <section id="p-plan" class="panel" role="tabpanel" aria-labelledby="t-plan" hidden>
+    <div class="cabeza"><div>
+      <div class="eyebrow" id="pl-fecha">Plan de vivienda</div>
+      <h1 id="pl-titulo">Mi plan</h1>
+    </div></div>
+    <div id="pl-cuerpo"></div>
+  </section>
+
+  <!-- ===================== AHORROS ===================== -->
+  <section id="p-ahorros" class="panel" role="tabpanel" aria-labelledby="t-ahorros" hidden>
+    <div class="cabeza"><div>
+      <div class="eyebrow">Subsidios y descuentos</div>
+      <h1>Ahorros</h1>
+    </div></div>
+    <div id="a-cuerpo"></div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button role="tab" id="t-remates" aria-controls="p-remates" data-tab="remates" type="button"><span class="emoji" aria-hidden="true">🏛️</span>Remates</button>
+    <button role="tab" id="t-vivienda" aria-controls="p-vivienda" data-tab="vivienda" type="button"><span class="emoji" aria-hidden="true">🏠</span>Vivienda</button>
+    <button role="tab" id="t-comparar" aria-controls="p-comparar" data-tab="comparar" type="button"><span class="emoji" aria-hidden="true">⚖️</span>Comparar</button>
+    <button role="tab" id="t-plan" aria-controls="p-plan" data-tab="plan" type="button"><span class="emoji" aria-hidden="true">🧭</span>Mi plan</button>
+    <button role="tab" id="t-ahorros" aria-controls="p-ahorros" data-tab="ahorros" type="button"><span class="emoji" aria-hidden="true">💰</span>Ahorros</button>
+  </nav>
+</div>
+
+</div>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
   const ALMACEN = "radar-remates";
+  const HUB = "hub-vivienda";
   const TIPOS = [["casa","Casa"],["apartamento","Apartamento"],["otro","Sin tipo claro"],["lote","Lote"],["finca","Finca"],["local","Local/oficina"],["parqueadero","Parqueadero"],["vehiculo","Vehículo"]];
   const NOMBRES = {rama:"Rama Judicial", asuntoslegales:"Asuntos Legales", rematescolombia:"RematesColombia",
     rematandobienes:"RematandoBienes", sae:"SAE", cisa:"CISA", dadep:"DADEP Bogotá", davivienda:"Davivienda",
     davibank:"DAVIbank", cajasocial:"Caja Social", aval:"Grupo Aval", bancoagrario:"Banco Agrario", bbva:"BBVA",
     bancolombia:"Bancolombia", elmartillo:"El Martillo", superbid:"Superbid", subastasycomercio:"Subastas y Comercio"};
-  const DEFECTO = {presupuesto:90, casas:2, cabe:false, baseMin:"", baseMax:"", avMin:"", avMax:"",
+  // El presupuesto y el número de casas por defecto salen de los datos cifrados (no se escriben aquí).
+  const DEFECTO = {presupuesto:"", casas:2, cabe:false, baseMin:"", baseMax:"", avMin:"", avMax:"",
     tipos:["casa","apartamento","otro"], trampas:true, depto:"", texto:"", desde:"", hasta:"", dias:4, nuevos:false, orden:"descuento",
     desc:"", soloDesc:false, repetidos:false, sinPrecio:false, fuentesOff:[], bancos:false};
-  let paquete = null;
+  let paquete = null;      // remates (obligatorio)
+  let vivienda = null;     // {estado:"ok"|"vacio"|"error", datos}
+  let plan = null;         // {plan, archivos} o null
   let f = {...DEFECTO};
 
   const leer = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
   const escribir = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
+  const leerJSON = (k, d) => { try { const v = leer(k); return v ? JSON.parse(v) : d; } catch { return d; } };
+  const escribirJSON = (k, v) => escribir(k, JSON.stringify(v));
 
   const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
   async function descifrar(sobre, clave) {
@@ -213,29 +421,77 @@ legend,.leyenda{font-size:12px;font-weight:600;color:var(--muted);text-transform
     const plano = await crypto.subtle.decrypt({name:"AES-GCM", iv:b64(sobre.iv)}, llave, b64(sobre.datos));
     return JSON.parse(new TextDecoder().decode(plano));
   }
+  async function bajar(ruta) {
+    const r = await fetch(ruta + "?t=" + Date.now(), {cache:"no-store"});
+    if (!r.ok) throw Object.assign(new Error("http " + r.status), {falta: true});
+    return r.json();
+  }
 
   async function entrar(clave, recordar) {
     $("error").textContent = "Abriendo…";
+    const extraPlan = bajar("plan.json").catch(() => null);
+    const extraViv = bajar("vivienda/datos.json").catch(() => null);
     try {
-      const r = await fetch("datos.json?t=" + Date.now(), {cache:"no-store"});
-      const sobre = await r.json();
-      paquete = await descifrar(sobre, clave);
+      paquete = await descifrar(await bajar("datos.json"), clave);
     } catch (e) {
       $("error").textContent = "Clave incorrecta o datos no disponibles.";
       escribir(ALMACEN + ":clave", null);
       return;
     }
+    const [sp, sv] = await Promise.all([extraPlan, extraViv]);
+    try { plan = sp ? await descifrar(sp, clave) : null; } catch { plan = null; }
+    if (!sv) vivienda = {estado: "vacio"};
+    else { try { vivienda = {estado: "ok", datos: await descifrar(sv, clave)}; } catch { vivienda = {estado: "error"}; } }
     if (recordar) escribir(ALMACEN + ":clave", clave);
+    $("error").textContent = "";
     $("acceso").hidden = true;
     $("app").hidden = false;
     iniciar();
+    pintarVivienda();
+    pintarComparar();
+    pintarPlan();
+    pintarAhorros();
+    iniciarPestanas();
   }
 
   const M = (v) => v == null || isNaN(v) ? "—" : "$" + (v / 1e6).toLocaleString("es-CO", {minimumFractionDigits:1, maximumFractionDigits:1}) + " M";
+  const P = (v) => Math.round(v * 100) + "%";
   const num = (v) => v === "" || v == null || isNaN(+v) ? null : +v * 1e6;
   const hoy = () => new Date(new Date().toLocaleString("en-US", {timeZone:"America/Bogota"}));
   const iso = (d) => d.toISOString().slice(0, 10);
+  const sinTildes = (s) => (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const urlSegura = (u) => /^https?:\/\//i.test(u || "") ? u : "";
+  const fecha = (s) => { const g = new Date(s); return isNaN(g) ? "" : g.toLocaleString("es-CO", {dateStyle:"medium", timeStyle:"short"}); };
 
+  // ---------------------------------------------------------------- Pestañas
+  const PESTANAS = ["remates", "vivienda", "comparar", "plan", "ahorros"];
+  function mostrar(id, enfocar) {
+    document.querySelectorAll("nav.tabs button").forEach((b) => {
+      const si = b.dataset.tab === id;
+      b.setAttribute("aria-selected", si); b.tabIndex = si ? 0 : -1;
+      if (si && enfocar) b.focus();
+    });
+    PESTANAS.forEach((p) => $("p-" + p).hidden = p !== id);
+    escribir(HUB + ":tab", id);
+  }
+  function iniciarPestanas() {
+    const botones = [...document.querySelectorAll("nav.tabs button")];
+    botones.forEach((b) => b.addEventListener("click", () => { mostrar(b.dataset.tab); window.scrollTo({top: 0}); }));
+    $("app").querySelector("nav.tabs").addEventListener("keydown", (e) => {
+      const i = botones.findIndex((b) => b.getAttribute("aria-selected") === "true");
+      let j = null;
+      if (e.key === "ArrowRight") j = (i + 1) % botones.length;
+      if (e.key === "ArrowLeft") j = (i - 1 + botones.length) % botones.length;
+      if (e.key === "Home") j = 0;
+      if (e.key === "End") j = botones.length - 1;
+      if (j != null) { e.preventDefault(); mostrar(botones[j].dataset.tab, true); }
+    });
+    const t = leer(HUB + ":tab");
+    mostrar(PESTANAS.includes(t) ? t : "remates");
+  }
+
+  // ---------------------------------------------------------------- Remates
   function costo(base, venta) {
     const c = paquete.costos;
     return base * (1 + (venta ? 0 : c.impuesto_remate_pct) + c.registro_beneficencia_pct + c.colchon_pct) + c.gastos_fijos;
@@ -246,6 +502,9 @@ legend,.leyenda{font-size:12px;font-weight:600;color:var(--muted);text-transform
   }
 
   function iniciar() {
+    DEFECTO.presupuesto = paquete.presupuesto ? Math.round(paquete.presupuesto / 1e6) : "";
+    DEFECTO.casas = paquete.casas || 2;
+    f = {...DEFECTO};
     const guardado = leer(ALMACEN + ":filtros");
     if (location.hash.length > 1) {
       try { f = {...DEFECTO, ...JSON.parse(decodeURIComponent(location.hash.slice(1)))}; } catch {}
@@ -261,15 +520,15 @@ legend,.leyenda{font-size:12px;font-weight:600;color:var(--muted);text-transform
     $("f-tipos").innerHTML = TIPOS.map(([v, t]) => `<label><input type="checkbox" value="${v}">${t}</label>`).join("");
     const deptos = [...new Set(paquete.remates.map((r) => r.departamento).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
     $("f-depto").innerHTML += deptos.map((d) => `<option>${esc(d)}</option>`).join("");
-    const g = new Date(paquete.generado);
-    $("actualizado").textContent = `Actualizado ${g.toLocaleString("es-CO", {dateStyle:"medium", timeStyle:"short"})} · ${paquete.remates.length} remates vigentes`;
+    $("actualizado").textContent = `Actualizado ${fecha(paquete.generado)} · ${paquete.remates.length} remates vigentes`;
     const c = paquete.costos;
     $("supuestos").textContent = `Costo total estimado = postura × (1 + ${c.impuesto_remate_pct*100}% impuesto de remate + ${c.registro_beneficencia_pct*100}% registro + ${c.colchon_pct*100}% colchón) + ${M(c.gastos_fijos)} de abogado y certificados. Depósito para ofertar: 40% del avalúo. Si hay más postores el precio sube. Verifica todo con el expediente y el certificado de tradición antes de consignar.`;
     pintarFiltros();
-    document.querySelectorAll(".filtros input, .filtros select, #orden").forEach((el) => el.addEventListener("input", () => { tomarFiltros(); render(); }));
-    $("limpiar").onclick = () => { f = {...DEFECTO}; pintarFiltros(); render(); };
+    document.querySelectorAll("#p-remates .filtros input, #p-remates .filtros select, #orden").forEach((el) => el.addEventListener("input", () => { tomarFiltros(); render(); }));
+    $("limpiar").onclick = () => { f = {...DEFECTO}; pintarFiltros(); tomarFiltros(); render(); };
     $("salir").onclick = () => { escribir(ALMACEN + ":clave", null); location.reload(); };
     $("lista").addEventListener("click", (e) => { if (e.target.classList.contains("desc")) e.target.classList.toggle("abierta"); });
+    $("lista").addEventListener("keydown", (e) => { if (e.target.classList.contains("desc") && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); e.target.classList.toggle("abierta"); } });
     render();
   }
 
@@ -300,9 +559,6 @@ legend,.leyenda{font-size:12px;font-weight:600;color:var(--muted);text-transform
     escribir(ALMACEN + ":filtros", JSON.stringify(f));
     history.replaceState(null, "", "#" + encodeURIComponent(JSON.stringify(f)));
   }
-
-  const sinTildes = (s) => (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
   function render() {
     const presupuesto = (num(f.presupuesto) ?? 0);
@@ -364,26 +620,25 @@ legend,.leyenda{font-size:12px;font-weight:600;color:var(--muted);text-transform
     $("k-tope").textContent = M(casas > 1 ? topeCasas : topeUna);
     $("resumen").textContent = `${filas.length} resultado${filas.length === 1 ? "" : "s"}`;
 
-    if (!filas.length) { $("lista").innerHTML = `<div class="vacio">Nada con estos filtros. Prueba ampliando los rangos.</div>`; return; }
+    if (!filas.length) { $("lista").innerHTML = `<div class="vacio"><span class="emoji" aria-hidden="true">🔍</span><b>Nada con estos filtros</b>Prueba ampliando los rangos.</div>`; return; }
 
-    const P = (v) => Math.round(v * 100) + "%";
     $("lista").innerHTML = filas.slice(0, 400).map((r) => {
       const conPrecio = r.base != null;
       const total = conPrecio ? costo(r.base, r.venta) : null;
       const dias = r.fecha ? Math.round((new Date(r.fecha + "T12:00:00") - h) / 864e5) : null;
       let etq = "";
-      if (r.descuento_real >= paquete.descuento_joya) etq += `<span class="etq joya">💎 ${P(r.descuento_real)} bajo mercado</span> `;
+      if (r.descuento_real >= paquete.descuento_joya) etq += `<span class="etq joya">💎 ${P(r.descuento_real)} bajo mercado</span>`;
       if (conPrecio && casas > 1 && r.base <= topeCasas) etq += `<span class="etq dos">Caben ${casas}</span>`;
       else if (conPrecio && r.base <= topeUna) etq += `<span class="etq una">Cabe 1</span>`;
-      if (r.alertas.length || (conPrecio && r.base < 8e6)) etq += ` <span class="etq trampa">Revisar</span>`;
-      if (r.venta) etq += ` <span class="etq pista">${esc(r.modalidad)}</span>`;
-      if (r.banco) etq += ` <span class="etq pista">Demanda un banco</span>`;
-      if (r.repetido) etq += ` <span class="etq pista">Ya fracasó antes</span>`;
-      if (r.catastral) etq += ` <span class="etq pista">Avalúo catastral</span>`;
-      if (!conPrecio) etq += ` <span class="etq pista">Oficial, sin avalúo</span>`;
-      if (r.visto >= hace7) etq += ` <span class="etq nuevo">Nuevo</span>`;
-      const trampa = r.alertas.length ? `<div class="alerta">⚠ ${esc(r.alertas.join(" · "))}</div>`
-        : (conPrecio && r.base < 8e6 ? `<div class="alerta">⚠ Postura muy baja: casi siempre es una fracción del inmueble</div>` : "");
+      if (r.alertas.length || (conPrecio && r.base < 8e6)) etq += `<span class="etq trampa">Revisar</span>`;
+      if (r.venta) etq += `<span class="etq pista">${esc(r.modalidad)}</span>`;
+      if (r.banco) etq += `<span class="etq pista">Demanda un banco</span>`;
+      if (r.repetido) etq += `<span class="etq pista">Ya fracasó antes</span>`;
+      if (r.catastral) etq += `<span class="etq pista">Avalúo catastral</span>`;
+      if (!conPrecio) etq += `<span class="etq pista">Oficial, sin avalúo</span>`;
+      if (r.visto >= hace7) etq += `<span class="etq nuevo">Nuevo</span>`;
+      const trampa = r.alertas.length ? `<div class="alerta">⚠️ ${esc(r.alertas.join(" · "))}</div>`
+        : (conPrecio && r.base < 8e6 ? `<div class="alerta">⚠️ Postura muy baja: casi siempre es una fracción del inmueble</div>` : "");
       let mercado = "";
       if (r.valor_mercado) {
         mercado = `<div class="mercado">Mercado estimado <b>${M(r.valor_mercado)}</b> (${Math.round(r.area)} m² × ${M(r.m2_mercado)}/m², valor conservador de la ciudad; el barrio cambia mucho) · descuento real <b>${P(r.descuento_real)}</b>${r.descuento_real > 0.7 ? `<div class="alerta">Demasiado bueno para ser cierto: confirma que esos m² son de la vivienda (no del lote) y que se remata el 100%.</div>` : ""}</div>`;
@@ -392,11 +647,11 @@ legend,.leyenda{font-size:12px;font-weight:600;color:var(--muted);text-transform
       }
       const proceso = [r.juzgado, r.radicado && `Rad. ${r.radicado}`, r.matricula && `Matrícula ${r.matricula}`, r.correo]
         .filter(Boolean).map(esc).join(" · ");
-      const enlaces = r.enlaces.map((e) => `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(NOMBRES[e.fuente] || e.fuente)}</a>`);
+      const enlaces = r.enlaces.filter((e) => urlSegura(e.url)).map((e) => `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(NOMBRES[e.fuente] || e.fuente)}</a>`);
       return `<article class="tarjeta">
         <div class="fila"><div><div class="tipo">${esc(r.tipo === "otro" ? "Inmueble" : r.tipo)}</div>
-          <div class="lugar">${esc([r.municipio, r.departamento].filter(Boolean).join(", ") || "Sin ubicación")}</div></div>
-          <div style="text-align:right">${etq}</div></div>
+          <div class="lugar">📍 ${esc([r.municipio, r.departamento].filter(Boolean).join(", ") || "Sin ubicación")}</div></div>
+          <div class="etqs">${etq}</div></div>
         <div class="numeros">
           <div class="base"><span>${r.venta ? "Precio base" : "Postura mínima"}</span><b>${M(r.base)}</b></div>
           <div><span>Avalúo</span><b>${M(r.avaluo)}</b></div>
@@ -406,11 +661,469 @@ legend,.leyenda{font-size:12px;font-weight:600;color:var(--muted);text-transform
         ${mercado}
         ${trampa}
         ${proceso ? `<div class="proceso">${proceso}</div>` : ""}
-        <div class="desc" title="Toca para ver completo">${esc(r.descripcion)}</div>
-        <div class="pie"><span class="sub">${r.fecha ? `${esc(r.fecha)} ${esc(r.hora)} · en ${dias} días` : "Venta directa, sin fecha fija"}</span>
+        <div class="desc" tabindex="0" role="button" title="Toca para ver completo">${esc(r.descripcion)}</div>
+        <div class="pie"><span class="sub">${r.fecha ? `🗓️ ${esc(r.fecha)} ${esc(r.hora)} · en ${dias} días` : "Venta directa, sin fecha fija"}</span>
           <span>${enlaces.join(" · ")} →</span></div>
       </article>`;
     }).join("");
+  }
+
+  // ---------------------------------------------------------------- Vivienda
+  const VDEF = {zona: "", precioMax: "", orden: "puntaje", soloNuevos: false, soloBaja: false, ocultarSosp: false, tipo: ""};
+  let fv = {...VDEF};
+  const clave = (s) => sinTildes(String(s || "")).trim();
+  function medianaDe(a, medianas) {
+    if (!medianas) return null;
+    const idx = {};
+    Object.entries(medianas).forEach(([k, v]) => idx[clave(k)] = v);
+    for (const k of [a.zona, a.localidad, a.barrio, a.municipio, a.ciudad]) {
+      const v = idx[clave(k)];
+      if (v) return {zona: k, valor: v};
+    }
+    return null;
+  }
+  const condicion = (a) => a.condicion ?? a.estado ?? a["nuevo/usado"] ?? a.nuevo_usado ?? "";
+  const m2 = (a) => a.precio_m2 || (a.precio && a.area ? a.precio / a.area : null);
+
+  function viviendaVacia(titulo, texto) {
+    return `<div class="vacio"><span class="emoji" aria-hidden="true">🏗️</span><b>${titulo}</b><span>${texto}</span></div>`;
+  }
+
+  function pintarVivienda() {
+    const cuerpo = $("v-cuerpo");
+    if (!vivienda || vivienda.estado !== "ok" || !vivienda.datos || !Array.isArray(vivienda.datos.top)) {
+      cuerpo.innerHTML = vivienda && vivienda.estado === "error"
+        ? viviendaVacia("No pude abrir los datos de vivienda", "Puede que se hayan cifrado con otra clave. Vuelve a intentarlo después de la próxima corrida.")
+        : viviendaVacia("El radar de vivienda está arrancando…", "Cuando haga su primera búsqueda, aquí aparecerán los mejores apartamentos y casas en venta, con su precio por m² frente al de la zona.");
+      return;
+    }
+    const d = vivienda.datos, cfg = d.config || {};
+    $("v-actualizado").textContent = `Actualizado ${fecha(d.generado)} · ${d.top.length} anuncios destacados`;
+    fv = {...VDEF, ...leerJSON(HUB + ":vivienda", {})};
+    const zonas = [...new Set([...(cfg.zonas || []).map((z) => typeof z === "string" ? z : (z.nombre || z.zona || "")),
+      ...d.top.map((a) => a.zona || a.localidad).filter(Boolean)])].filter(Boolean).sort((a, b) => a.localeCompare(b, "es"));
+    const tipos = [...new Set(d.top.map((a) => a.tipo).filter(Boolean))];
+    const fuentes = Object.entries(d.fuentes || {});
+    cuerpo.innerHTML = `
+      ${fuentes.length ? `<div class="chips" aria-label="Estado de las fuentes">${fuentes.map(([k, v]) =>
+        `<span class="pill ${v === "ok" ? "ok" : "bad"}" title="${esc(v)}">${v === "ok" ? "●" : "⚠️"} ${esc(k)}</span>`).join("")}</div>` : ""}
+      <details class="filtros" open>
+        <summary><span><span class="emoji" aria-hidden="true">🎛️</span> Filtros</span></summary>
+        <div class="rejilla">
+          <fieldset><legend>Zona</legend>
+            <select id="v-zona" aria-label="Zona"><option value="">Todas las zonas</option>${zonas.map((z) => `<option>${esc(z)}</option>`).join("")}</select>
+            ${tipos.length > 1 ? `<select id="v-tipo" aria-label="Tipo"><option value="">Todos los tipos</option>${tipos.map((t) => `<option>${esc(t)}</option>`).join("")}</select>` : ""}
+          </fieldset>
+          <fieldset><legend>Precio máximo</legend>
+            <div class="par"><input id="v-precio" type="number" min="0" placeholder="${cfg.tope ? Math.round(cfg.tope / 1e6) : "sin tope"}" aria-label="Precio máximo en millones"><span>millones</span></div>
+            <select id="v-orden" aria-label="Ordenar viviendas">
+              <option value="puntaje">Mejor puntaje primero</option>
+              <option value="precio">Más baratas primero</option>
+              <option value="m2">Menor $/m² primero</option>
+              <option value="vsmed">Más bajo frente a la zona</option>
+              <option value="area">Más grandes primero</option>
+            </select>
+          </fieldset>
+          <fieldset><legend>Mostrar</legend>
+            <label class="interruptor"><input id="v-nuevos" type="checkbox"> Solo anuncios nuevos</label>
+            <label class="interruptor"><input id="v-baja" type="checkbox"> Solo los que bajaron de precio</label>
+            <label class="interruptor"><input id="v-sosp" type="checkbox"> Ocultar sospechosos</label>
+          </fieldset>
+        </div>
+      </details>
+      <div class="barra"><span class="sub" id="v-resumen" role="status"></span></div>
+      <div id="v-lista" class="lista"></div>
+      <p class="nota">$/m² comparado con la mediana de la zona que calcula el radar. Un precio muy por debajo puede ser error del anuncio o estafa: nunca consignes separaciones a cuentas personales y pide el certificado de tradición antes de pagar.</p>`;
+    $("v-zona").value = zonas.includes(fv.zona) ? fv.zona : "";
+    if ($("v-tipo")) $("v-tipo").value = fv.tipo;
+    $("v-precio").value = fv.precioMax; $("v-orden").value = fv.orden;
+    $("v-nuevos").checked = fv.soloNuevos; $("v-baja").checked = fv.soloBaja; $("v-sosp").checked = fv.ocultarSosp;
+    cuerpo.querySelectorAll("input,select").forEach((el) => el.addEventListener("input", () => {
+      fv = {zona: $("v-zona").value, tipo: $("v-tipo") ? $("v-tipo").value : "", precioMax: $("v-precio").value, orden: $("v-orden").value,
+        soloNuevos: $("v-nuevos").checked, soloBaja: $("v-baja").checked, ocultarSosp: $("v-sosp").checked};
+      escribirJSON(HUB + ":vivienda", fv);
+      renderVivienda();
+    }));
+    renderVivienda();
+  }
+
+  function filtrarVivienda() {
+    const d = vivienda.datos, cfg = d.config || {};
+    const tope = num(fv.precioMax) ?? cfg.tope ?? null;
+    return d.top.filter((a) => {
+      if (fv.zona && ![a.zona, a.localidad, a.barrio].some((x) => clave(x) === clave(fv.zona))) return false;
+      if (fv.tipo && a.tipo !== fv.tipo) return false;
+      if (tope != null && a.precio != null && a.precio > tope) return false;
+      if (fv.soloNuevos && !a.nuevo) return false;
+      if (fv.soloBaja && !(a.bajo_precio || (a.precio_anterior && a.precio_anterior > a.precio))) return false;
+      if (fv.ocultarSosp && a.sospechoso) return false;
+      return true;
+    });
+  }
+
+  function tarjetaVivienda(a, medianas) {
+    const med = medianaDe(a, medianas);
+    const pm2 = m2(a);
+    const rel = med && pm2 ? pm2 / med.valor - 1 : null;
+    let chips = "";
+    if (a.nuevo) chips += `<span class="pill info">✨ Nuevo</span>`;
+    if (a.bajo_precio || (a.precio_anterior && a.precio_anterior > a.precio)) chips += `<span class="pill ok">📉 Bajó precio</span>`;
+    if (a.sospechoso) chips += `<span class="pill bad" title="${esc(typeof a.sospechoso === "string" ? a.sospechoso : "Precio o datos poco creíbles")}">⚠️ Sospechoso</span>`;
+    const cond = condicion(a);
+    if (cond) chips += `<span class="pill gris">${esc(cond)}</span>`;
+    if (a.puntaje != null) chips += `<span class="pill oro">★ ${esc(Math.round(a.puntaje * 10) / 10)}</span>`;
+    const lugar = [a.barrio, a.localidad || a.zona].filter(Boolean).join(", ");
+    const habs = [a.habitaciones != null && `${a.habitaciones} hab`, a.banos != null && `${a.banos} baño${a.banos == 1 ? "" : "s"}`].filter(Boolean).join(" · ");
+    const url = urlSegura(a.url);
+    return `<article class="tarjeta">
+      <div class="fila"><div style="min-width:0">
+          <div class="tipo" style="text-transform:none">${esc(a.titulo || a.tipo || "Vivienda")}</div>
+          <div class="lugar">📍 ${esc(lugar || "Sin ubicación")}${a.estrato ? ` · estrato ${esc(a.estrato)}` : ""}</div></div>
+        <div class="etqs">${chips}</div></div>
+      <div class="numeros">
+        <div class="precio"><span>Precio</span><b>${M(a.precio)}</b>${a.precio_anterior && a.precio_anterior > a.precio ? ` <s class="antes">${M(a.precio_anterior)}</s>` : ""}</div>
+        <div><span>Área</span><b>${a.area ? Math.round(a.area) + " m²" : "—"}</b></div>
+        <div><span>Habitaciones</span><b>${esc(habs || "—")}</b></div>
+        <div><span>$/m²</span><b>${M(pm2)}</b></div>
+      </div>
+      ${med && pm2 ? `<div class="mercado">$/m² <b>${P(Math.abs(rel))} ${rel <= 0 ? "por debajo" : "por encima"}</b> de la mediana de ${esc(med.zona)} (${M(med.valor)}/m²)</div>` : ""}
+      ${a.motivo ? `<div class="sub">💡 ${esc(a.motivo)}</div>` : ""}
+      <div class="pie"><span class="sub">${[a.administracion ? `Admin. $${Math.round(a.administracion).toLocaleString("es-CO")}` : "", a.vendedor ? esc(a.vendedor) : "", a.fuente ? esc(a.fuente) : ""].filter(Boolean).join(" · ")}</span>
+        ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">Ver anuncio →</a>` : ""}</div>
+    </article>`;
+  }
+
+  function renderVivienda() {
+    const d = vivienda.datos;
+    const filas = filtrarVivienda();
+    const med = (a) => { const m = medianaDe(a, d.medianas), p = m2(a); return m && p ? p / m.valor : 9; };
+    const nb = (v) => v ?? Infinity;
+    const orden = {
+      puntaje: (a, b) => (b.puntaje ?? -1) - (a.puntaje ?? -1),
+      precio: (a, b) => nb(a.precio) - nb(b.precio),
+      m2: (a, b) => nb(m2(a)) - nb(m2(b)),
+      vsmed: (a, b) => med(a) - med(b),
+      area: (a, b) => (b.area ?? 0) - (a.area ?? 0),
+    }[fv.orden] || (() => 0);
+    filas.sort(orden);
+    $("v-resumen").textContent = `${filas.length} anuncio${filas.length === 1 ? "" : "s"}`;
+    $("v-lista").innerHTML = filas.length ? filas.map((a) => tarjetaVivienda(a, d.medianas)).join("")
+      : `<div class="vacio"><span class="emoji" aria-hidden="true">🔍</span><b>Nada con estos filtros</b>Sube el precio máximo o cambia de zona.</div>`;
+  }
+
+  // ---------------------------------------------------------------- Comparar
+  const GASTOS_COMPRA = 0.035; // escritura, beneficencia y registro aprox. del comprador
+  function mejoresRemates(presupuesto) {
+    const h = hoy(), limite = iso(new Date(h.getTime() + 4 * 864e5));
+    return paquete.remates.filter((r) => r.base != null && r.base >= 8e6 && !r.alertas.length
+        && ["casa", "apartamento", "otro"].includes(r.tipo) && (!r.fecha || r.fecha >= limite)
+        && costo(r.base, r.venta) <= presupuesto)
+      .sort((a, b) => (b.descuento_real ?? -1) - (a.descuento_real ?? -1) || (a.vs_tipico ?? 9) - (b.vs_tipico ?? 9) || a.base - b.base);
+  }
+  function riesgoRemate(r) {
+    if (r.venta) return ["warn", "Medio", "Venta directa de banco o entidad: no hay juzgado, pero puede estar ocupado y se compra como está."];
+    if (r.descuento_real > 0.7) return ["bad", "Alto", "Descuento demasiado grande: puede no ser el 100% del inmueble."];
+    return ["bad", "Alto", "Sin visitarlo por dentro, puede estar ocupado, el proceso puede anularse y hay que consignar el 40% del avalúo para ofertar."];
+  }
+  function tiempoRemate(r) {
+    return r.venta ? "2 a 6 meses (pliego, escritura y entrega)" : "6 a 18 meses (aprobación del remate, registro y entrega; más si hay que desalojar)";
+  }
+  function riesgoVivienda(a) {
+    if (a.sospechoso) return ["bad", "Alto", "El radar lo marcó sospechoso: confirma que exista y que quien vende sea el dueño."];
+    return ["ok", "Bajo", "Compra normal: se visita, se estudian títulos y se paga contra escritura."];
+  }
+  function tiempoVivienda(a) {
+    return /nuev|plano|proyecto/i.test(condicion(a)) ? "Según la entrega del proyecto (sobre planos puede ser 1 a 3 años)" : "1 a 3 meses (promesa, escritura y registro)";
+  }
+
+  function pintarComparar() {
+    const presupuesto = paquete.presupuesto || 0;
+    $("c-sub").textContent = presupuesto ? `Lo que se consigue con ${M(presupuesto)}, contando gastos.` : "";
+    const rem = mejoresRemates(presupuesto).slice(0, 3);
+    const hayViv = vivienda && vivienda.estado === "ok" && vivienda.datos && Array.isArray(vivienda.datos.top);
+    const todas = hayViv ? vivienda.datos.top.filter((a) => a.precio) : [];
+    const totalV = (a) => a.precio * (1 + GASTOS_COMPRA);
+    let viv = todas.filter((a) => totalV(a) <= presupuesto && !a.sospechoso).sort((a, b) => (b.puntaje ?? -1) - (a.puntaje ?? -1)).slice(0, 3);
+    const excede = !viv.length && todas.length;
+    if (excede) viv = [...todas].filter((a) => !a.sospechoso).sort((a, b) => a.precio - b.precio).slice(0, 3);
+
+    const miniRem = (r) => { const [c, t, d] = riesgoRemate(r); const tot = costo(r.base, r.venta); return `<div class="mini card">
+      <div class="fila"><b class="tipo">${esc(r.tipo === "otro" ? "Inmueble" : r.tipo)}</b>${r.descuento_real != null ? `<span class="etq joya">💎 ${P(r.descuento_real)} bajo mercado</span>` : ""}</div>
+      <div class="lugar">📍 ${esc([r.municipio, r.departamento].filter(Boolean).join(", ") || "Sin ubicación")}</div>
+      <div class="numeros"><div><span>Costo total</span><b>${M(tot)}</b></div><div><span>Sobra</span><b>${M(presupuesto - tot)}</b></div>
+        <div><span>Riesgo</span><b class="semaforo" style="color:var(--${c})">${t}</b></div><div><span>Hasta habitar</span><b>${r.venta ? "2–6 meses" : "6–18 meses"}</b></div></div>
+      <div class="sub">${esc(d)}</div>
+      ${r.enlaces[0] && urlSegura(r.enlaces[0].url) ? `<a href="${esc(r.enlaces[0].url)}" target="_blank" rel="noopener">Ver aviso →</a>` : ""}</div>`; };
+    const miniViv = (a) => { const [c, t, d] = riesgoVivienda(a); const tot = totalV(a); const url = urlSegura(a.url); return `<div class="mini card">
+      <div class="fila"><b class="tipo" style="text-transform:none">${esc(a.titulo || a.tipo || "Vivienda")}</b>${a.puntaje != null ? `<span class="pill oro">★ ${esc(Math.round(a.puntaje * 10) / 10)}</span>` : ""}</div>
+      <div class="lugar">📍 ${esc([a.barrio, a.localidad || a.zona].filter(Boolean).join(", ") || "Sin ubicación")}${a.area ? ` · ${Math.round(a.area)} m²` : ""}</div>
+      <div class="numeros"><div><span>Costo total</span><b>${M(tot)}</b></div><div><span>${tot <= presupuesto ? "Sobra" : "Falta"}</span><b>${M(Math.abs(presupuesto - tot))}</b></div>
+        <div><span>Riesgo</span><b class="semaforo" style="color:var(--${c})">${t}</b></div><div><span>Hasta habitar</span><b>${/nuev|plano|proyecto/i.test(condicion(a)) ? "Según entrega" : "1–3 meses"}</b></div></div>
+      <div class="sub">${esc(d)}</div>
+      ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">Ver anuncio →</a>` : ""}</div>`; };
+
+    const r0 = rem[0], v0 = viv[0];
+    const tabla = r0 || v0 ? `<h2><span class="emoji" aria-hidden="true">📋</span>Frente a frente</h2>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>🏛️ Mejor remate</th><th>🏠 Mejor vivienda</th></tr></thead>
+        <tbody>
+          <tr><td>Costo total</td><td>${r0 ? M(costo(r0.base, r0.venta)) : "—"}</td><td>${v0 ? M(totalV(v0)) : "—"}</td></tr>
+          <tr><td>Plata que se congela antes</td><td>${r0 ? (r0.venta ? "Según pliego" : `${M((r0.avaluo || 0) * 0.4)} de depósito (40% del avalúo)`) : "—"}</td><td>${v0 ? "Arras o separación, normalmente 10%" : "—"}</td></tr>
+          <tr><td>Riesgo</td><td>${r0 ? riesgoRemate(r0)[1] : "—"}</td><td>${v0 ? riesgoVivienda(v0)[1] : "—"}</td></tr>
+          <tr><td>Tiempo hasta habitar</td><td>${r0 ? tiempoRemate(r0) : "—"}</td><td>${v0 ? tiempoVivienda(v0) : "—"}</td></tr>
+          <tr><td>¿Se puede visitar?</td><td>${r0 ? "Casi nunca por dentro" : "—"}</td><td>${v0 ? "Sí" : "—"}</td></tr>
+          <tr><td>Crédito o subsidio</td><td>${r0 ? "No: se paga de contado en 5 días" : "—"}</td><td>${v0 ? "Sí se puede combinar" : "—"}</td></tr>
+        </tbody></table></div>` : "";
+
+    $("c-cuerpo").innerHTML = `
+      <div class="duelo">
+        <div class="panel"><h3><span class="emoji" aria-hidden="true">🏛️</span>Mejores remates que caben</h3>
+          ${rem.length ? rem.map(miniRem).join("") : `<div class="vacio"><span class="emoji" aria-hidden="true">🔍</span><b>Ningún remate cabe hoy</b>Con los costos completos ninguno entra en el presupuesto.</div>`}</div>
+        <div class="panel"><h3><span class="emoji" aria-hidden="true">🏠</span>${excede ? "Viviendas más baratas (no alcanza)" : "Mejores viviendas que caben"}</h3>
+          ${!hayViv ? viviendaVacia("El radar de vivienda está arrancando…", "Cuando tenga datos, aquí verás las mejores viviendas que se pueden comprar con la misma plata.")
+            : viv.length ? viv.map(miniViv).join("") : `<div class="vacio"><span class="emoji" aria-hidden="true">🔍</span><b>Sin anuncios para comparar</b></div>`}
+          ${excede ? `<div class="note warn"><b>No alcanza de contado.</b> Ninguna vivienda del radar cabe en el presupuesto con gastos; haría falta crédito o subsidio. Mira la ruta en Mi plan.</div>` : ""}</div>
+      </div>
+      ${tabla}
+      <p class="nota">Remate: postura + impuesto de remate, registro, colchón y abogado (los mismos supuestos de la pestaña Remates), sin contar que la puja suba. Vivienda: precio + ${Math.round(GASTOS_COMPRA * 1000) / 10}% de escritura, beneficencia y registro (estimado). Los tiempos son rangos típicos, no promesas.</p>`;
+  }
+
+  // ---------------------------------------------------------------- Markdown (para los archivos del plan)
+  function inline(s) {
+    s = esc(s);
+    s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+    s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    s = s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+    s = s.replace(/(^|[^*\w])\*([^*\s][^*]*?)\*(?!\w)/g, "$1<i>$2</i>");
+    s = s.replace(/\[ \]/g, "☐").replace(/\[x\]/gi, "☑");
+    return s;
+  }
+  function md(src) {
+    const L = String(src || "").replace(/\r/g, "").split("\n");
+    const out = [];
+    const esLista = (l) => /^\s*([-*+]|\d+[.)])\s+/.test(l);
+    const esBloque = (l) => /^(#{1,6}\s|>|```|\|)/.test(l) || /^\s*(-{3,}|\*{3,})\s*$/.test(l) || esLista(l);
+    let i = 0;
+    while (i < L.length) {
+      const l = L[i];
+      if (!l.trim()) { i++; continue; }
+      let m;
+      if ((m = l.match(/^(#{1,6})\s+(.*)$/))) { const n = Math.min(5, m[1].length + 1); out.push(`<h${n}>${inline(m[2])}</h${n}>`); i++; continue; }
+      if (/^\s*(-{3,}|\*{3,})\s*$/.test(l)) { out.push("<hr>"); i++; continue; }
+      if (l.startsWith("```")) { const b = []; i++; while (i < L.length && !L[i].startsWith("```")) b.push(L[i++]); i++; out.push(`<pre>${esc(b.join("\n"))}</pre>`); continue; }
+      if (l.startsWith(">")) { const b = []; while (i < L.length && L[i].startsWith(">")) b.push(L[i++].replace(/^>\s?/, "")); out.push(`<blockquote>${md(b.join("\n"))}</blockquote>`); continue; }
+      if (l.trim().startsWith("|") && i + 1 < L.length && /^\s*\|?\s*:?-{2,}/.test(L[i + 1])) {
+        const celdas = (x) => x.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
+        const cab = celdas(l); i += 2; const filas = [];
+        while (i < L.length && L[i].trim().startsWith("|")) filas.push(celdas(L[i++]));
+        out.push(`<div class="tbl"><table><thead><tr>${cab.map((c) => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${filas.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`);
+        continue;
+      }
+      if (esLista(l)) {
+        const pila = []; let html = "";
+        while (i < L.length && (esLista(L[i]) || (L[i].trim() && /^\s{2,}/.test(L[i]) && pila.length))) {
+          const x = L[i];
+          const mm = x.match(/^(\s*)([-*+]|\d+[.)])\s+(.*)$/);
+          if (!mm) { html += " " + inline(x.trim()); i++; continue; }
+          const ind = mm[1].length, tag = /\d/.test(mm[2]) ? "ol" : "ul";
+          while (pila.length && ind < pila[pila.length - 1].ind) { html += `</li></${pila.pop().tag}>`; }
+          if (!pila.length || ind > pila[pila.length - 1].ind) { html += `<${tag}>`; pila.push({ind, tag}); }
+          else html += "</li>";
+          html += `<li>${inline(mm[3])}`; i++;
+        }
+        while (pila.length) html += `</li></${pila.pop().tag}>`;
+        out.push(html); continue;
+      }
+      const b = [];
+      while (i < L.length && L[i].trim() && !(b.length && esBloque(L[i]))) b.push(L[i++].trim());
+      out.push(`<p>${inline(b.join(" "))}</p>`);
+    }
+    return out.join("\n");
+  }
+
+  // ---------------------------------------------------------------- Mi plan
+  async function copiar(texto, btn) {
+    const antes = btn.textContent;
+    try { await navigator.clipboard.writeText(texto); btn.textContent = "✓ Copiado"; }
+    catch {
+      const pre = btn.closest(".msg,.row")?.querySelector("pre,.mono");
+      if (pre) { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+      btn.textContent = "Selecciona y copia";
+    }
+    setTimeout(() => btn.textContent = antes, 1800);
+  }
+  const SUBS = [["resumen", "🧭 Resumen"], ["pasos", "✅ Pasos"], ["proyectos", "🏢 Proyectos"], ["mensajes", "💬 Mensajes"], ["contactos", "📞 Contactos"], ["docs", "📂 Docs"], ["archivos", "📄 Archivos"]];
+
+  function pintarPlan() {
+    const cuerpo = $("pl-cuerpo");
+    const p = plan && plan.plan;
+    if (!p) {
+      cuerpo.innerHTML = `<div class="vacio"><span class="emoji" aria-hidden="true">🧭</span><b>El plan todavía no está publicado</b><span>Aparecerá después de la próxima corrida del radar.</span></div>`;
+      return;
+    }
+    $("pl-titulo").textContent = p.titulo || "Mi plan";
+    $("pl-fecha").textContent = `Plan de vivienda${p.fecha ? " · " + p.fecha : ""}`;
+    cuerpo.innerHTML = `<div class="seg" role="tablist" aria-label="Partes del plan">${SUBS.map(([k, t]) =>
+      `<button role="tab" type="button" data-sub="${k}" id="s-${k}" aria-controls="ps-${k}">${t}</button>`).join("")}</div>
+      ${SUBS.map(([k]) => `<div id="ps-${k}" class="panel" role="tabpanel" aria-labelledby="s-${k}" hidden></div>`).join("")}`;
+    planResumen(p, $("ps-resumen"));
+    planPasos(p, $("ps-pasos"));
+    planProyectos(p, $("ps-proyectos"));
+    planMensajes(p, $("ps-mensajes"));
+    planContactos(p, $("ps-contactos"));
+    planDocs(p, $("ps-docs"));
+    planArchivos($("ps-archivos"));
+    const botones = [...cuerpo.querySelectorAll(".seg button")];
+    const ir = (k, enfocar) => {
+      botones.forEach((b) => { const si = b.dataset.sub === k; b.setAttribute("aria-selected", si); b.tabIndex = si ? 0 : -1; if (si && enfocar) b.focus(); });
+      SUBS.forEach(([s]) => $("ps-" + s).hidden = s !== k);
+      escribir(HUB + ":sub", k);
+    };
+    botones.forEach((b) => b.addEventListener("click", () => ir(b.dataset.sub)));
+    cuerpo.querySelector(".seg").addEventListener("keydown", (e) => {
+      const i = botones.findIndex((b) => b.getAttribute("aria-selected") === "true");
+      const j = e.key === "ArrowRight" ? (i + 1) % botones.length : e.key === "ArrowLeft" ? (i - 1 + botones.length) % botones.length : null;
+      if (j != null) { e.preventDefault(); ir(botones[j].dataset.sub, true); }
+    });
+    const s = leer(HUB + ":sub");
+    ir(SUBS.some(([k]) => k === s) ? s : "resumen");
+  }
+
+  const nota = (n) => `<div class="note ${esc(n.tipo || "warn")}">${n.html}</div>`;
+  function planResumen(p, el) {
+    const r = p.ruta || {};
+    el.innerHTML = `
+      ${p.lead ? `<p class="muted">${esc(p.lead)}</p>` : ""}
+      <h2><span class="emoji" aria-hidden="true">📊</span>Tu situación</h2>
+      <div class="figures">${(p.figuras || []).map((x) => `<div class="fig"><b>${esc(x.valor)}</b><span>${esc(x.texto)}</span></div>`).join("")}</div>
+      ${(p.notas || []).map(nota).join("")}
+      ${r.columnas ? `<h2><span class="emoji" aria-hidden="true">🛣️</span>La ruta recomendada</h2>
+        ${r.intro ? `<p>${esc(r.intro)}</p>` : ""}
+        <div class="tbl"><table><thead><tr>${r.columnas.map((c, i) => `<th${i ? ' class="num"' : ""}>${esc(c)}</th>`).join("")}</tr></thead>
+          <tbody>${(r.filas || []).map((f) => `<tr>${f.map((c, i) => `<td${i ? ' class="num"' : ""}>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+        ${r.pie ? `<p class="muted">${esc(r.pie)}</p>` : ""}
+        ${(r.notas || []).map(nota).join("")}` : ""}
+      ${(p.linea || []).length ? `<h2><span class="emoji" aria-hidden="true">🗓️</span>Línea de tiempo</h2>
+        <ol class="timeline">${p.linea.map(([w, t]) => `<li><span class="when">${esc(w)}</span><span>${t}</span></li>`).join("")}</ol>` : ""}
+      ${(p.pendientes || []).length ? `<h2><span class="emoji" aria-hidden="true">❓</span>Falta confirmar</h2>
+        <ul class="clean glass">${p.pendientes.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+      ${p.pie ? `<footer>${esc(p.pie)}</footer>` : ""}`;
+  }
+
+  function checklist(el, grupos, llave, conDetalle) {
+    const hechos = new Set(leerJSON(HUB + ":" + llave, []));
+    let total = 0;
+    el.innerHTML = `<div class="progress" aria-hidden="true"><i></i></div><p class="muted mono" role="status"></p><div class="stack"></div>`;
+    const barra = el.querySelector(".progress i"), cuenta = el.querySelector("p.mono"), pila = el.querySelector(".stack");
+    const progreso = () => { const n = [...hechos].filter((h) => h.startsWith(llave)).length; barra.style.width = (total ? n / total * 100 : 0) + "%"; cuenta.textContent = `${n} de ${total} hechos`; };
+    grupos.forEach((g, gi) => {
+      const w = document.createElement("div"); w.className = "group"; w.innerHTML = `<h3>${esc(g.grupo)}</h3>`;
+      g.items.forEach((it, i) => {
+        total++;
+        const id = `${llave}${gi}-${i}`, t = typeof it === "string" ? it : it.t, d = typeof it === "string" ? "" : it.d;
+        const l = document.createElement("label"); l.className = "task" + (hechos.has(id) ? " done" : "");
+        l.innerHTML = `<input type="checkbox" ${hechos.has(id) ? "checked" : ""}><span><span class="t">${esc(t)}</span>${conDetalle && d ? `<p class="d">${esc(d)}</p>` : ""}</span>`;
+        l.querySelector("input").addEventListener("change", (e) => {
+          e.target.checked ? hechos.add(id) : hechos.delete(id);
+          l.classList.toggle("done", e.target.checked); escribirJSON(HUB + ":" + llave, [...hechos]); progreso();
+        });
+        w.appendChild(l);
+      });
+      pila.appendChild(w);
+    });
+    progreso();
+  }
+  function planPasos(p, el) {
+    const cont = document.createElement("div"); cont.className = "panel";
+    el.innerHTML = `<h2><span class="emoji" aria-hidden="true">✅</span>Pasos</h2><p class="muted">Marca lo que vayas haciendo. Se guarda en este dispositivo.</p>`;
+    el.appendChild(cont); checklist(cont, p.pasos || [], "p", true);
+  }
+  function planDocs(p, el) {
+    const D = p.documentos || {};
+    const cont = document.createElement("div"); cont.className = "panel";
+    el.innerHTML = `<h2><span class="emoji" aria-hidden="true">📂</span>Documentos</h2>${D.intro ? `<p class="muted">${esc(D.intro)}</p>` : ""}`;
+    el.appendChild(cont); checklist(cont, (D.grupos || []).map((g) => ({grupo: g.grupo, items: g.items})), "d", false);
+  }
+  function planProyectos(p, el) {
+    const P2 = p.proyectos || {};
+    el.innerHTML = `<h2><span class="emoji" aria-hidden="true">🏢</span>Proyectos</h2>
+      ${P2.nota_arriba ? nota({tipo: "info", html: P2.nota_arriba}) : ""}
+      <div class="lista">${(P2.lista || []).map((x) => { const u = urlSegura(x.url); return `<div class="card proy">
+        <div class="fila"><h3>${esc(x.nombre)}</h3><span class="pill ${esc(x.nivel || "gris")}">${esc(x.encaja)}</span></div>
+        <div class="lugar">${esc(x.detalle)}</div>
+        <div class="numeros"><div class="precio"><span>Precio</span><b>${esc(x.precio)}</b></div><div><span>Área</span><b>${esc(x.area)}</b></div></div>
+        ${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">Ver proyecto →</a>` : ""}</div>`; }).join("")}</div>
+      ${P2.nota_abajo ? nota({tipo: "warn", html: esc(P2.nota_abajo)}) : ""}
+      ${P2.pie ? `<p class="muted">${esc(P2.pie)}</p>` : ""}`;
+  }
+  function planMensajes(p, el) {
+    const Mm = p.mensajes || {};
+    el.innerHTML = `<h2><span class="emoji" aria-hidden="true">💬</span>Mensajes listos</h2>${Mm.intro ? `<p class="muted">${esc(Mm.intro)}</p>` : ""}<div class="stack panel"></div>`;
+    const pila = el.querySelector(".stack");
+    (Mm.lista || []).forEach((m) => {
+      const d = document.createElement("details"); d.className = "plegable";
+      d.innerHTML = `<summary>${esc(m.titulo)}</summary><div class="msg"><p class="muted">${esc(m.sub)}</p><pre></pre><button class="btn" type="button">📋 Copiar texto</button></div>`;
+      d.querySelector("pre").textContent = m.texto;
+      d.querySelector("button").addEventListener("click", (e) => copiar(m.texto, e.currentTarget));
+      pila.appendChild(d);
+    });
+  }
+  function planContactos(p, el) {
+    const C = p.contactos || {};
+    el.innerHTML = `<h2><span class="emoji" aria-hidden="true">📞</span>Contactos</h2>${C.aviso ? nota({tipo: "bad", html: C.aviso}) : ""}<div class="stack panel"></div>${C.pie ? `<p class="muted">${esc(C.pie)}</p>` : ""}`;
+    const pila = el.querySelector(".stack");
+    (C.grupos || []).forEach((g) => {
+      const w = document.createElement("div"); w.className = "group"; w.innerHTML = `<h3>${esc(g.grupo)}</h3>`;
+      g.lista.forEach((c) => {
+        const card = document.createElement("div"); card.className = "card contact";
+        card.innerHTML = `<h3>${esc(c.nombre)}</h3><p class="muted" style="font-size:14.5px">${esc(c.para)}</p>`;
+        c.filas.forEach((r) => {
+          const fila = document.createElement("div"); fila.className = "row";
+          const u = urlSegura(r.v);
+          fila.innerHTML = `<span class="k">${esc(r.k)}</span>` + (u ? `<a href="${esc(u)}" target="_blank" rel="noopener" style="overflow-wrap:anywhere">${esc(u.replace(/^https?:\/\/(www\.)?/, "").slice(0, 48))}</a>` : `<span class="mono" style="overflow-wrap:anywhere">${esc(r.v)}</span>`);
+          if (r.wa && urlSegura(r.wa)) { const a = document.createElement("a"); a.href = r.wa; a.target = "_blank"; a.rel = "noopener"; a.className = "btn chico"; a.textContent = "💬 WhatsApp"; fila.appendChild(a); }
+          else if (!u) { const b = document.createElement("button"); b.type = "button"; b.className = "btn ghost chico"; b.textContent = "Copiar"; b.addEventListener("click", (e) => copiar(r.v.replace(/ · .*$/, ""), e.currentTarget)); fila.appendChild(b); }
+          card.appendChild(fila);
+        });
+        w.appendChild(card);
+      });
+      pila.appendChild(w);
+    });
+  }
+  const NOMBRE_ARCHIVO = {PLAN: "📘 Plan completo", CHECKLIST: "✅ Checklist detallado", DOCUMENTOS: "📂 Documentos", MENSAJES: "💬 Mensajes", PROYECTOS: "🏢 Proyectos", CONTACTOS: "📞 Directorio de contactos", "AHORROS-Y-SUBSIDIOS": "💰 Ahorros y subsidios"};
+  function planArchivos(el) {
+    const A = (plan && plan.archivos) || {};
+    const ks = Object.keys(A);
+    el.innerHTML = `<h2><span class="emoji" aria-hidden="true">📄</span>Archivos completos</h2><p class="muted">El texto completo de cada documento del plan, con todas las fuentes.</p><div class="stack panel"></div>`;
+    const pila = el.querySelector(".stack");
+    if (!ks.length) { pila.innerHTML = `<div class="vacio"><b>Sin archivos</b></div>`; return; }
+    ks.forEach((k) => {
+      const d = document.createElement("details"); d.className = "plegable";
+      d.innerHTML = `<summary>${esc(NOMBRE_ARCHIVO[k] || k)}</summary><div class="md"></div>`;
+      d.addEventListener("toggle", () => { const c = d.querySelector(".md"); if (d.open && !c.innerHTML) c.innerHTML = md(A[k]); });
+      pila.appendChild(d);
+    });
+  }
+
+  // ---------------------------------------------------------------- Ahorros
+  function pintarAhorros() {
+    const A = (plan && plan.archivos) || {};
+    const k = Object.keys(A).find((x) => /ahorro|subsidio/i.test(x));
+    const S = (plan && plan.plan && plan.plan.ahorros) || null;
+    if (S || k) {
+      $("a-cuerpo").innerHTML = `
+        ${S && S.intro ? `<p class="muted">${esc(S.intro)}</p>` : ""}
+        ${S && (S.destacados || []).length ? `<div class="lista">${S.destacados.map((x) => `<div class="card fig" style="display:grid;gap:4px">
+          <div class="fila"><span class="emoji" style="font-size:28px" aria-hidden="true">${esc(x.emoji)}</span><span class="pill ${esc(x.tipo || "info")}">${esc(x.titulo)}</span></div>
+          <b>${esc(x.valor)}</b><span>${esc(x.texto)}</span></div>`).join("")}</div>` : ""}
+        ${S && (S.ilegal || []).length ? `<h2><span class="emoji" aria-hidden="true">🚫</span>Lo ilegal o arriesgado</h2>
+          <div class="tbl"><table><thead><tr><th>Práctica</th><th>Por qué no</th></tr></thead>
+          <tbody>${S.ilegal.map((r) => `<tr><td>${inline(r.practica)}</td><td>${inline(r.porque)}</td></tr>`).join("")}</tbody></table></div>` : ""}
+        ${k ? `<details class="plegable"><summary>📘 Guía completa de ahorros y subsidios</summary><div class="md">${md(A[k])}</div></details>` : ""}`;
+      return;
+    }
+    $("a-cuerpo").innerHTML = `<div class="vacio"><span class="emoji" aria-hidden="true">💰</span><b>Aún no hay guía de ahorros</b><span>Cuando el plan incluya los subsidios y descuentos, aparecerán aquí.</span></div>`;
   }
 
   $("entrar").onclick = () => entrar($("clave").value, $("recordar").checked);
